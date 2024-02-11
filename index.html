@@ -42,6 +42,7 @@
     
     
   </nav>
+  
 </header>
 
     <div id="content">
@@ -100,6 +101,52 @@ int main() {
     
       <div class="article-more-link">
         <a href="/2024/02/11/helloWorld/#more">read more</a>
+      </div>
+    
+    
+    
+  </div>
+</article>
+
+
+
+  
+    <article id="post-inotify-tools安装及使用" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="name">
+      <a href="/2022/11/08/inotify-tools%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8/">inotify-tools安装及使用</a>
+      
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2022-11-07T18:02:38.000Z" itemprop="datePublished">November 8, 2022, 2:02 AM</time>
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        序
+这几天正在鼓捣hexo这个静态博客框架，为了在浏览器输入时不加端口号，引入了nginx做反向代理，映射到hexo所监听的4000端口，但nginx本身就是一个静态http服务器，而且性能要比hexo自带的http服务器高效，那么为什么不直接用nginx做博客的容器呢？于是出现了这么两个问题：
+
+问题1：如何用nginx做博客的容器
+简单的办法是将hexo目录中的public目录直接复制到nginx的目录下，但这有点麻烦，还要复制目录。能不能在nginx的建立一个链接文件直接链接到hexo的public目录呢？测试了一下，可行，第一个问题得到解决
+
+问题2：如何动态的更新public目录
+之
+      
+    </div>
+    
+      <div class="article-more-link">
+        <a href="/2022/11/08/inotify-tools%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8/#more">read more</a>
       </div>
     
     

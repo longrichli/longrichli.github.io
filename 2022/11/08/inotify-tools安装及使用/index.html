@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>inotify-tools安装及使用 | Lcf&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <meta name="description" content="序 这几天正在鼓捣hexo这个静态博客框架，为了在浏览器输入时不加端口号，引入了nginx做反向代理，映射到hexo所监听的4000端口，但nginx本身就是一个静态http服务器，而且性能要比hexo自带的http服务器高效，那么为什么不直接用nginx做博客的容器呢？于是出现了这么两个问题：  问题1：如何用nginx做博客的容器 简单的办法是将hexo目录中的public目录直接复制到ngi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="inotify-tools安装及使用">
+<meta property="og:url" content="http://example.com/2022/11/08/inotify-tools%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Lcf&#39;s Blog">
+<meta property="og:description" content="序 这几天正在鼓捣hexo这个静态博客框架，为了在浏览器输入时不加端口号，引入了nginx做反向代理，映射到hexo所监听的4000端口，但nginx本身就是一个静态http服务器，而且性能要比hexo自带的http服务器高效，那么为什么不直接用nginx做博客的容器呢？于是出现了这么两个问题：  问题1：如何用nginx做博客的容器 简单的办法是将hexo目录中的public目录直接复制到ngi">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-07T18:02:38.000Z">
+<meta property="article:modified_time" content="2023-09-26T16:28:47.382Z">
+<meta property="article:author" content="longrichli">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="inotify">
+<meta property="article:tag" content="安装教程">
+<meta name="twitter:card" content="summary"><meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">Lcf&#39;s Blog</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">×</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+    
+  </nav>
+  
+</header>
+
+    <div id="content">
+      <article id="post-inotify-tools安装及使用" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="headline name">
+      inotify-tools安装及使用
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2022-11-07T18:02:38.000Z" itemprop="datePublished">November 8, 2022, 2:02 AM</time>
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>这几天正在鼓捣hexo这个静态博客框架，为了在浏览器输入时不加端口号，引入了nginx做反向代理，映射到hexo所监听的4000端口，但nginx本身就是一个静态http服务器，而且性能要比hexo自带的http服务器高效，那么为什么不直接用nginx做博客的容器呢？于是出现了这么两个问题：</p>
+<h2 id="问题1：如何用nginx做博客的容器"><a href="#问题1：如何用nginx做博客的容器" class="headerlink" title="问题1：如何用nginx做博客的容器"></a>问题1：如何用nginx做博客的容器</h2><p>简单的办法是将hexo目录中的public目录直接复制到nginx的目录下，但这有点麻烦，还要复制目录。能不能在nginx的建立一个链接文件直接链接到hexo的public目录呢？测试了一下，可行，第一个问题得到解决</p>
+<h2 id="问题2：如何动态的更新public目录"><a href="#问题2：如何动态的更新public目录" class="headerlink" title="问题2：如何动态的更新public目录"></a>问题2：如何动态的更新public目录</h2><p>之前用hexo做博客的服务器，因为public目录是它自己家的，所以在更新一些博客时，它可以管理public目录，做到动态的更新博客，但现在用nginx作为博客的服务器，它可不管，所以博客页面就不能动态刷新了。开始想到的办法是写个脚本，定时执行 hexo clean 和 hexo g 命令更新public目录，但这个办法有很大的缺点，如何控制刷新的时间：一分钟一刷新，造成了资源浪费，一天一刷新的话，今天发布的博客明天才看到，有点不爽。最好的办法是检测到有hexo下的source目录有更改了，就执行更新操作，于是就引入了inodify-tools。它可以对一个目录或文件进行监听，检测文件或目录的创建，删除，移动，打开，关闭等操作，第二个问题得以解决。下面介绍它的安装和使用。</p>
+<h1 id="inotify-简介"><a href="#inotify-简介" class="headerlink" title="inotify 简介"></a>inotify 简介</h1><p>inotify是Linux内核2.6.13 (June 18, 2005)版本新增的一个子系统（API），它提供了一种监控文件系统（基于inode的）事件的机制，可以监控文件系统的变化如文件修改、新增、删除等，并可以将相应的事件通知给应用程序。</p>
+<p>inotify既可以监控文件，也可以监控目录。当监控目录时，它可以同时监控目录及目录中的各子目录及文件的。此外，inotify 使用文件描述符作为接口，因而可以使用通常的文件I&#x2F;O操作select、poll和epoll来监视文件系统的变化。</p>
+<p>inotify 可以监视的文件系统常见事件包括：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">IN_ACCESS：文件被访问</span><br><span class="line">IN_MODIFY：文件被修改</span><br><span class="line">IN_ATTRIB，文件属性被修改</span><br><span class="line">IN_CLOSE_WRITE，以可写方式打开的文件被关闭</span><br><span class="line">IN_CLOSE_NOWRITE，以不可写方式打开的文件被关闭</span><br><span class="line">IN_OPEN，文件被打开</span><br><span class="line">IN_MOVED_FROM，文件被移出监控的目录</span><br><span class="line">IN_MOVED_TO，文件被移入监控着的目录</span><br><span class="line">IN_CREATE，在监控的目录中新建文件或子目录</span><br><span class="line">IN_DELETE，文件或目录被删除</span><br><span class="line">IN_DELETE_SELF，自删除，即一个可执行文件在执行时删除自己</span><br><span class="line">IN_MOVE_SELF，自移动，即一个可执行文件在执行时移动自己</span><br></pre></td></tr></table></figure>
+<p>通过&#x2F;proc接口中的如下参数设定inotify能够使用的内存大小：</p>
+<ol>
+<li>&#x2F;proc&#x2F;sys&#x2F;fs&#x2F;inotify&#x2F;max_queue_events<br> 应用程序调用inotify时需要初始化inotify实例，并时会为其设定一个事件队列，此文件中的值则是用于设定此队列长度的上限；超出此上限的事件将会被丢弃；</li>
+<li>&#x2F;proc&#x2F;sys&#x2F;fs&#x2F;inotify&#x2F;max_user_instances<br>此文件中的数值用于设定每个用户ID（以ID标识的用户）可以创建的inotify实例数目的上限；</li>
+<li>&#x2F;proc&#x2F;sys&#x2F;fs&#x2F;inotify&#x2F;max_user_watches<br>此文件中的数值用于设定每个用户ID可以监控的文件或目录数目上限；</li>
+</ol>
+<h1 id="inotify-tools简介"><a href="#inotify-tools简介" class="headerlink" title="inotify-tools简介"></a>inotify-tools简介</h1><p>inotify是一个API，需要通过开发应用程序进行调用，对于大多数用户来讲这有着许多不便，inotify-tools的出现弥补了这一不足。inotify-tools是一套组件，它包括一个C库和几个命令行工具，这些命令行工具可用于通过命令行或脚本对某文件系统的事件进行监控。它由Rohan McGovern开发，其项目网址为<a target="_blank" rel="noopener" href="http://inotify-tools.sourceforge.net./">http://inotify-tools.sourceforge.net。</a></p>
+<p>inotify-tools提供的两个命令行工具：<br>inotifywait：通过inotify API等待被监控文件上的相应事件并返回监控结果，默认情况下，正常的结果返回至标准输出，诊断类的信息则返回至标准错误输出。它可以在监控到对应监控对象上指定的事件后退出，也可以进行持续性的监控。<br>inotifywatch：通过inotify API收集被监控文件或目录的相关事件并输出统计信息。</p>
+<h1 id="inotify-tools-安装"><a href="#inotify-tools-安装" class="headerlink" title="inotify-tools 安装"></a>inotify-tools 安装</h1><ol>
+<li><p>安装前提: 需要有gcc-c++ 环境</p>
+</li>
+<li><p>下载源码压缩包</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>解压</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf inotify-tools-3.14.tar.gz</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>进入解压后的目录并执行configure生成MakeFile文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd inotify-tools-3.14</span><br><span class="line">./configure</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>make 和 make install</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>在&#x2F;usr&#x2F;local&#x2F;bin目录下会生成inotifywait和inotifywatch两个二进制文件,安装完成</li>
+</ol>
+<h1 id="inotify-tools使用"><a href="#inotify-tools使用" class="headerlink" title="inotify-tools使用"></a>inotify-tools使用</h1><h2 id="inotifywait使用"><a href="#inotifywait使用" class="headerlink" title="inotifywait使用"></a>inotifywait使用</h2><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">inotifywait  [-hcmrq]  [-e  &lt;event&gt;  ]  [-t &lt;seconds&gt; ] [--format &lt;fmt&gt; ] [--timefmt &lt;fmt&gt; ]</span><br><span class="line">       &lt;file&gt; [ ... ]</span><br></pre></td></tr></table></figure>
+<h3 id="选项参数"><a href="#选项参数" class="headerlink" title="选项参数"></a>选项参数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">-h,–-help    # 输出帮助信息</span><br><span class="line">@           # 排除不需要监视的文件，可以是相对路径，也可以是绝对路径</span><br><span class="line">–-fromfile   # 从文件读取需要监视的文件或排除的文件，一个文件一行，排除的文件以@开头</span><br><span class="line">-m,-–monitor # 接收到一个事情而不退出，无限期地执行。默认行为是接收到一个事情后立即退出</span><br><span class="line">-d,-–daemon  # 跟–monitor一样，除了是在后台运行，需要指定 –-outfile把事情输出到一个文件。也意味着使用了-–syslog</span><br><span class="line">-o,-–outfile # 输出事情到一个文件而不是标准输出。</span><br><span class="line">-s,-–syslog  # 输出错误信息到系统日志</span><br><span class="line">-r,-–recursive # 监视一个目录下的所有子目录。</span><br><span class="line">-q,-–quiet   # 指定一次，不会输出详细信息，指定二次，除了致命错误，不会输出任何信息。</span><br><span class="line">-–exclude    # 正则匹配需要排除的文件，大小写敏感。</span><br><span class="line">-–excludei   # 正则匹配需要排除的文件，忽略大小写。</span><br><span class="line">-t，-–timeout# 设置超时时间，如果为0，则无限期地执行下去。</span><br><span class="line">-e,-–event   # 指定监视的事件。</span><br><span class="line">-c,–-csv     # 输出csv格式。</span><br><span class="line">–-timefmt    # 指定时间格式，用于–format选项中的%T格式。</span><br><span class="line">–-format     # 指定输出格式。</span><br><span class="line"><span class="meta prompt_">   %</span><span class="language-bash">w 表示发生事件的目录</span></span><br><span class="line"><span class="meta prompt_">   %</span><span class="language-bash">f 表示发生事件的文件</span></span><br><span class="line"><span class="meta prompt_">   %</span><span class="language-bash">e 表示发生的事件</span></span><br><span class="line"><span class="meta prompt_">   %</span><span class="language-bash">Xe 事件以“X”分隔</span></span><br><span class="line"><span class="meta prompt_">   %</span><span class="language-bash">T 使用由–timefmt定义的时间格式</span></span><br></pre></td></tr></table></figure>
+<h3 id="监听的事件"><a href="#监听的事件" class="headerlink" title="监听的事件"></a>监听的事件</h3><table>
+<thead>
+<tr>
+<th align="center">事件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">access</td>
+<td>访问文件</td>
+</tr>
+<tr>
+<td align="center">modify</td>
+<td>修改文件</td>
+</tr>
+<tr>
+<td align="center">attrib</td>
+<td>修改文件属性,比如可读,可写等</td>
+</tr>
+<tr>
+<td align="center">close_write</td>
+<td>以写的方式被打开的文件被关闭</td>
+</tr>
+<tr>
+<td align="center">close_nowrite</td>
+<td>以只读的方式被打开的文件被关闭</td>
+</tr>
+<tr>
+<td align="center">close</td>
+<td>文件被关闭(不管以什么方式打开的文件)</td>
+</tr>
+<tr>
+<td align="center">open</td>
+<td>文件被打开</td>
+</tr>
+<tr>
+<td align="center">moved_to</td>
+<td>一个文件或目录移动到监听的目录，即使是在同一目录内移动，此事件也触发</td>
+</tr>
+<tr>
+<td align="center">moved_from</td>
+<td>一个文件或目录移出监听的目录，即使是在同一目录内移动，此事件也触发。</td>
+</tr>
+<tr>
+<td align="center">move</td>
+<td>只要文件移动,此事件就会触发</td>
+</tr>
+<tr>
+<td align="center">move_self</td>
+<td>文件或目录被移除，之后不再监听此文件或目录。</td>
+</tr>
+<tr>
+<td align="center">create</td>
+<td>文件或目录被创建</td>
+</tr>
+<tr>
+<td align="center">delete</td>
+<td>文件或目录被删除</td>
+</tr>
+<tr>
+<td align="center">delete_self</td>
+<td>文件或目录被删除后,不在监听此文件</td>
+</tr>
+<tr>
+<td align="center">unmount</td>
+<td>文件系统取消挂载,之后不在监听此文件系统</td>
+</tr>
+</tbody></table>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><ol>
+<li><p>一直监听&#x2F;home目录及其子目录,当有文件创建时,删除时触发事件,以 ‘%T %w %f %e’格式输出,其中%T的格式为: ‘%y-%m-%d %H:%M’</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inotifywait -mr -e create,delete --timefm &#x27;%y-%m-%d %H:%M&#x27; --format &#x27;%T %w %f %e&#x27; /home</span><br></pre></td></tr></table></figure>
+<p> 当在&#x2F;home目录下输入</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir jack</span><br></pre></td></tr></table></figure>
+<p> 会输出:</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">22-11-08 00:57 /home/ jack CREATE,ISDIR</span><br></pre></td></tr></table></figure>
+<p> 当在&#x2F;home目录下输入</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rmdir -f jack</span><br></pre></td></tr></table></figure>
+<p> 会输出:</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">22-11-08 01:02 /home/ jack DELETE,ISDIR</span><br></pre></td></tr></table></figure></li>
+<li><p>写个脚本,完成: 当&#x2F;home目录下的文件发生移动时,控制台输出:%f发生了移动(%f为文件名)</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">inotifywait -mr -e move  --format &#x27;%w%f&#x27; /home | while read file</span><br><span class="line"> do</span><br><span class="line">     echo $file 被移动了</span><br><span class="line"> done</span><br></pre></td></tr></table></figure>
+<p> 当将&#x2F;home目录下的jack目录移动到&#x2F;home目录下的tom目录中时,输出以下信息</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/home/jack 被移动了</span><br><span class="line">/home/tom/jack 被移动了</span><br></pre></td></tr></table></figure>
+<p> 为什么输出两次? </p>
+<p> jack目录从&#x2F;home目录移出一次</p>
+<p> jack目录移动到&#x2F;home&#x2F;tom目录中一次</p>
+</li>
+</ol>
+<h2 id="inotifywatch-使用"><a href="#inotifywatch-使用" class="headerlink" title="inotifywatch 使用"></a>inotifywatch 使用</h2><h3 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inotifywatch [ options ] file1 [ file2 ] [ ... ]</span><br></pre></td></tr></table></figure>
+<h3 id="选项参数-1"><a href="#选项参数-1" class="headerlink" title="选项参数"></a>选项参数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-h，-–help       # 输出帮助信息</span><br><span class="line">-v，-–verbose    # 输出详细信息</span><br><span class="line">@                # 排除不需要监视的文件，可以是相对路径，也可以是绝对路径。</span><br><span class="line">-–fromfile       # 从文件读取需要监视的文件或排除的文件，一个文件一行，排除的文件以@开头。</span><br><span class="line">-z，-–zero       # 输出表格的行和列，即使元素为空</span><br><span class="line">-–exclude        # 正则匹配需要排除的文件，大小写敏感。</span><br><span class="line">-–excludei       # 正则匹配需要排除的文件，忽略大小写。</span><br><span class="line">-r，-–recursive  # 监视一个目录下的所有子目录。</span><br><span class="line">-t，-–timeout    # 设置超时时间</span><br><span class="line">-e，-–event      # 只监听指定的事件。</span><br><span class="line">-a，-–ascending  # 以指定事件升序排列。</span><br><span class="line">-d，-–descending # 以指定事件降序排列</span><br></pre></td></tr></table></figure>
+<h3 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h3><p>统计&#x2F;home目录下文件或目录的创建,删除,移动次数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inotifywatch -r -e move,create,delete /home</span><br></pre></td></tr></table></figure>
+<p>在&#x2F;home目录下执行 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir king</span><br><span class="line">rmdir jack</span><br><span class="line">mv king tom/king</span><br></pre></td></tr></table></figure>
+<p>输出如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">total  moved_from  moved_to  create  delete  filename</span><br><span class="line">3      1           0         1       1       /home/</span><br><span class="line">1      0           0         0       0       /home/jack/</span><br><span class="line">1      0           1         0       0       /home/tom/</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/467190"></a><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/467190">https://developer.aliyun.com/article/467190</a> <br><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1683037">https://cloud.tencent.com/developer/article/1683037</a></p>
+
+      
+    </div>
+    
+    
+    <div class="article-category">
+      
+        <b>Categories:</b>
+        <a class="article-category-link" href="/categories/%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">安装教程</a>
+      
+      
+        <br/>
+      
+      
+        <b>Tags:</b>
+        <a class="article-tag-none-link" href="/tags/inotify/" rel="tag">inotify</a>, <a class="article-tag-none-link" href="/tags/linux/" rel="tag">linux</a>, <a class="article-tag-none-link" href="/tags/%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" rel="tag">安装教程</a>
+      
+    </div>
+    
+    
+  </div>
+</article>
+
+  
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2024/02/11/helloWorld/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          helloWorld
+        
+      </div>
+    </a>
+  
+  
+    <span id="article-nav-older" class="article-nav-link-wrap older"></span>
+  
+</nav>
+
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#fff');f('--secondary-color','#c0c0c0');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>
