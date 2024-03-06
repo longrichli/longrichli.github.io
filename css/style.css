@@ -24,8 +24,8 @@ body {
   background: var(--bg-color);
   color: var(--text-color);
   font-family: var(--body-stack);
-  font-size: 16px;
-  font-size: clamp(16px, 2.4vw, 21px);
+  font-size: 14px;
+  font-size: clamp(14px, 2.4vw, 17px);
   margin: auto;
   min-height: 100%;
   position: relative;
@@ -188,8 +188,6 @@ body {
   max-width: calc(100vw - 6rem);
   position: relative;
   text-align: left;
-  text-decoration: none;
-  text-transform: none;
 }
 
 .archive-article-title:hover {
@@ -260,7 +258,6 @@ h3, h4, h5, h6 {
   font-size: 1em;
   font-weight: bold;
   margin-top: 1.5rem;
-  text-transform: uppercase;
 }
 
 h4, h5, h6 {
@@ -363,7 +360,6 @@ blockquote {
   letter-spacing: 0.1em;
   margin-bottom: 1.1em;
   text-align: center;
-  text-transform: uppercase;
 }
  
 /* miscellaneous */
