@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>RFB协议原理分析 | Lcf&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+    <!-- <link rel="icon" href="favicon.ico"> -->
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs4c6QAACl1JREFUeF7t2L2u3FcVhvE9Z05ObExwREqE0tHwJXEHKERCNDFIiMvgCrgHOhp6LiARIjR8JKkoEIqQEEVEkGLEl6id4zN/NEcKSmWf2exizXp/J6Vnba/3eZcfj7MbP/nZNvwggEAkgR0BRPYuNAK3BAjAISAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIILl90BAjADSAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIILl90BAjADSAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIILl90BAjADSAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIILl90BAjADSAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIILl90BAjADSAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIILl90BAjADSAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIILl90BAjADSAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIILl90BAjADSAQTIAAgssXHQECcAMIBBMggODyRUeAANwAAsEECCC4fNERIAA3gEAwAQIIKP/yYjeO/53yc9i2cbNtp4z47BkSIIAzLO3klZ98PMZhG3d2wPEP/n4/xtULJ/9WBs6LAAGcV1933vb49/22bePe5eX44Ve/NL742c+M68Nh7HbP/iZwO7Pfj9//6z/jp3/6YBy/CfjpS4AAmnZ7K4DDNh7euxp/+P63x6svPTgp6W8e/2O8/tavx/XNza00aOAkfGfzYQI4m6pOW/QTAXzu3tV4543XxtdeeflO3wAOh21c7S/GWx9+NL779rvj6c02jl8aCOA0/ufyaQI4l6ZO3PPTAnjv0bfGVz7/8Pbr/MVz/glw/B9/+91u/PzDx+PR2++MawI4kfx5fZwAzquvO2/7fwvgr4/Ho18QwJ2Bn+kHCeBMi3ve2gTwPEJ+/UiAAJreAQE0LXZxLAJYDLTKcwRQpYnaexBA7X6mtyOAaXRRgwTQtG4CaFrs4lgEsBholecIoEoTtfcggNr9TG9HANPoogYJoGndBNC02MWxCGAx0CrPEUCVJmrvQQC1+5nejgCm0UUNEkDTugmgabGLYxHAYqBVniOAKk3U3oMAavczvR0BTKOLGiSApnUTQNNiF8cigMVAqzxHAFWaqL0HAdTuZ3o7AphGFzVIAE3rJoCmxS6ORQCLgVZ5jgCqNFF7DwKo3c/0dgQwjS5qkACa1k0ATYtdHIsAFgOt8hwBVGmi9h4EULuf6e0IYBpd1CABNK2bAJoWuzgWASwGWuU5AqjSRO09CKB2P9PbEcA0uqhBAmhaNwE0LXZxLAJYDLTKcwRQpYnaexBA7X6mtyOAaXRRgwTQtG4CaFrs4lgEsBholecIoEoTtfcggNr9TG9HANPoogYJoGndBNC02MWxCGAx0CrPEUCVJmrvQQC1+5nejgCm0UUNEkDTugmgabGLYxHAYqBVniOAKk3U3oMAavczvR0BTKOLGiSApnUTQNNiF8cigMVAqzxHAFWaqL0HAdTuZ3o7AphGFzVIAE3rJoCmxS6ORQCLgVZ5jgCqNFF7DwKo3c/0dgQwjS5qkACa1k0ATYtdHIsAFgOt8hwBVGmi9h4EULuf6e0IYBpd1CABNK2bAJoWuzgWASwGWuU5AqjSRO09CKB2P9PbEcA0uqhBAmhaNwE0LXZxLAJYDLTKcwRQpYnaexBA7X6mtyOAaXRRgwTQtG4CaFrs4lgEsBholecIoEoTtfcggNr9TG9HANPoogYJoGndBNC02MWxCGAx0CrPEUCVJmrvQQC1+5nejgCm0UUNEkDTugmgabGLYxHAYqBVniOAKk3U3oMAavczvR0BTKOLGiSApnUTQNNiF8cigMVAqzxHAFWaqL0HAdTuZ3o7AphGFzVIAE3rJoCmxS6ORQCLgVZ5jgCqNFF7DwKo3c/0dgQwjS5qkACa1k0ATYtdHIsAFgOt8hwBVGmi9h4EULuf6e0IYBpd1CABNK2bAJoWuzgWASwGWuU5AqjSRO09CKB2P9PbEcA0uqhBAmhaNwE0LXZxLAJYDLTKcwRQpYnaexBA7X6mtyOAaXRRgwTQtG4CaFrs4lgEsBholecIoEoTtfcggNr9TG9HANPoogYJoGndBNC02MWxCGAx0CrPEUCVJmrvQQC1+5nejgCm0UUNEkDTugmgabGLYxHAYqBVniOAKk3U3oMAavczvR0BTKOLGiSApnUTQNNiF8cigMVAqzxHAFWaqL0HAdTuZ3o7AphGFzVIAE3rJoCmxS6ORQCLgVZ5jgCqNFF7DwKo3c/0dgQwjS5qkACa1k0ATYtdHIsAFgOt8hwBVGmi9h4EULuf6e0IYBpd1CABNK2bAJoWuzgWASwGWuU5AqjSRO09CKB2P9PbEcA0uqhBAmhaNwE0LXZxLAJYDLTKc58WwG/feG18/ZWXx8c3h7E7/sIzfg7bNl7c78ebf/lofO+X746nN9vtzFYlmD2WEiCApTjrPPaJAB7euxp//MF3xhce3D9puff+9s/xzTd/Na5vbsZutyOAk+idz4cJ4Hy6OmnTWwFs27j/wuX40Te+PF596cG4Phy/ATz7K8DxG8D9y/343d//PX78/p/Hzebv/pPAn9mHCeDMCjt53eOf3ydPxjhsYzzn6///3j7O7C/GePHq5N/OwHkRIIDz6mtq28uLi3Fx/EZwx+mjJw5jG0+P0vDTmgABtK5XOASeTYAAXAgCwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR4AA3AACwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR4AA3AACwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR4AA3AACwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR4AA3AACwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR4AA3AACwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR4AA3AACwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR4AA3AACwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR4AA3AACwQQIILh80REgADeAQDABAgguX3QECMANIBBMgACCyxcdAQJwAwgEEyCA4PJFR+C/PoYml4nIu8YAAAAASUVORK5CYII=" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+  
+  <script src="/js/quotes.js"></script>
+  <meta name="description" content="RFB(The Remote Framebuffer Protocol) 协议介绍 ​ RFB的中文名字叫做”远程帧缓冲区协议”, 它用于访问远程的用户界面, 允许客户端查看和操作远程的窗口系统。它主要是将远程窗口系统的帧缓冲区（可以理解我屏幕中的像素区）发送给客户端，因而客户端就可以看到远程窗口的界面了。客户端也会向运行RFB协议的服务端发送一些事件，比如鼠标事件，键盘事件，这样就客户端就可以操">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RFB协议原理分析">
+<meta property="og:url" content="http://example.com/2024/03/01/RFB%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Lcf&#39;s Blog">
+<meta property="og:description" content="RFB(The Remote Framebuffer Protocol) 协议介绍 ​ RFB的中文名字叫做”远程帧缓冲区协议”, 它用于访问远程的用户界面, 允许客户端查看和操作远程的窗口系统。它主要是将远程窗口系统的帧缓冲区（可以理解我屏幕中的像素区）发送给客户端，因而客户端就可以看到远程窗口的界面了。客户端也会向运行RFB协议的服务端发送一些事件，比如鼠标事件，键盘事件，这样就客户端就可以操">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-01T14:38:35.000Z">
+<meta property="article:modified_time" content="2024-03-06T13:39:33.511Z">
+<meta property="article:author" content="longrichli">
+<meta property="article:tag" content="网络协议">
+<meta name="twitter:card" content="summary"><meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="wrapper">
+    <header id="header">
+  <h1 id="title">
+    <a href="/">Lcf&#39;s Blog</a>
+  </h1>
+  <nav>
+    
+    
+      
+      <a class="nav-link" href="/">Home</a>
+    
+      
+        <span class="nav-spacer">|</span>
+      
+      <a class="nav-link" href="/archives">Archives</a>
+    
+    
+  </nav>
+  <div>
+      <!-- <a href="javascript: void(0)" id=""></a> -->
+      <div id="quote" class="article-entry"></div>
+      <div id="author" class="article-entry"></div>
+
+  </div>
+  
+</header>
+
+    <div id="content">
+      <article id="post-RFB协议原理分析" class="article article-type-post" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h2 class="article-title" itemprop="headline name">
+      RFB协议原理分析
+    </h2>
+  
+
+
+        <div class="article-meta">
+          <time class="article-date" datetime="2024-03-01T14:38:35.000Z" itemprop="datePublished">2024-03-01 10:38 pm</time>
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+        <h2 id="RFB-The-Remote-Framebuffer-Protocol-协议介绍"><a href="#RFB-The-Remote-Framebuffer-Protocol-协议介绍" class="headerlink" title="RFB(The Remote Framebuffer Protocol) 协议介绍"></a>RFB(The Remote Framebuffer Protocol) 协议介绍</h2><p>​		RFB的中文名字叫做”远程帧缓冲区协议”, 它用于访问远程的用户界面, 允许客户端查看和操作远程的窗口系统。它主要是将远程窗口系统的帧缓冲区（可以理解我屏幕中的像素区）发送给客户端，因而客户端就可以看到远程窗口的界面了。客户端也会向运行RFB协议的服务端发送一些事件，比如鼠标事件，键盘事件，这样就客户端就可以操作远程的窗口系统了。VNC（Virtual Network Computing）就是基于的RFB协议，它用于远程控制桌面，类似于蒲公英。</p>
+<h3 id="RFB协议的监听端口"><a href="#RFB协议的监听端口" class="headerlink" title="RFB协议的监听端口"></a>RFB协议的监听端口</h3><p>​		RFB协议的默认监听端口位 5190，对于一台主机运行多个RFB服务器的情况下，监听端口位 5900 + N 。一些基于浏览器的客户端使用Java应用程序来运行RFB协议。RFB服务器有时在端口5800上提供一个简单的HTTP服务器，该服务器提供必要的Java小程序。</p>
+<p>​		在某些情况下，客户端和服务器的初始角色是相反的，RFB客户端监听端口5500，RFB服务器联系RFB客户端。一旦建立了连接，双方将扮演正常角色，RFB服务器将发送第一条握手消息。</p>
+<p>​		请注意，IANA为RFB分配的唯一端口号是端口5900，因此RFB客户端和服务器应避免使用其他端口号，除非它们与已知使用非标准端口的服务器或客户端通信。</p>
+<h3 id="显示协议"><a href="#显示协议" class="headerlink" title="显示协议"></a>显示协议</h3><p>​		协议的显示端基于一个图形原语：“在给定的x，y位置放置一个存放像素数据的矩形（可以理解为在屏幕的x，y坐标的位置放了宽w个像素，高h个像素的矩形）”。这似乎是一种绘制许多用户界面组件的低效方法。然而，允许对像素数据进行各种不同的编码使我们在如何权衡各种参数（如网络带宽、客户端绘制速度和服务器处理速度）方面具有很大的灵活性。</p>
+<p>​		这些矩形的序列进行帧缓冲区更新（这里简称为“更新”）。更新表示从一个有效帧缓冲区状态到另一个有效帧缓冲区状态的更改（可以理解为屏幕上的像素刷新），因此在某些方面类似于视频帧。更新中的矩形通常是不相交的，但并不总是不相交的。</p>
+<p>​		更新由RFB客户端驱动，比如我们在RFB客户端的界面上滑动鼠标，RFB客户端会将我们鼠标滑动时的坐标实时发送给RFB服务端，RFB服务端计算出鼠标指针的像素位置，将鼠标像素发送给RFB客户端，这样我们就会看到鼠标指针移动了。其他的比如按动键盘，鼠标按键这些都是一样的原理。</p>
+<h3 id="输入协议"><a href="#输入协议" class="headerlink" title="输入协议"></a>输入协议</h3><p>​		当用户按下键或指针按钮，或者移动指针设备，客户端就会将输入事件发送到服务器。这些输入事件也可以从其他非标准I&#x2F;O设备合成。例如，基于笔的手写识别引擎可能会生成键盘事件。</p>
+<h3 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h3><p>​		RFB协议经过三个已发布版本的演变：3.3、3.7和3.8。本文主要记录最终版本3.8；在后面描述早期版本的细微差异。</p>
+<h2 id="协议消息"><a href="#协议消息" class="headerlink" title="协议消息"></a>协议消息</h2><p>​		RFB协议可以在任何可靠的传输上运行，无论是字节流还是基于消息的传输。它通常通过TCP&#x2F;IP连接进行操作。协议分为三个阶段。首先是握手阶段，其目的是商定协议版本和要使用的安全类型。第二阶段是初始化阶段，客户机和服务器在其中交换ClientInit和ServerInit消息。最后一个阶段是正常的协议交互。客户机可以发送它想要的任何消息，也会从服务器接收消息作为结果。所有这些消息都以消息类型字节开头，后跟消息特定数据。</p>
+<p>​		以下协议消息的描述使用基本类型U8、U16、U32、S8、S16和S32。它们分别表示8位、16位和32位无符号整数以及8位、16位和32位有符号整数。所有多字节整数（像素值本身除外）都以大端顺序排列（最高有效字节优先）。有些消息使用基本类型的数组，数组中的条目数由数组前面的字段确定。</p>
+<h3 id="握手消息"><a href="#握手消息" class="headerlink" title="握手消息"></a>握手消息</h3><h4 id="协议版本握手"><a href="#协议版本握手" class="headerlink" title="协议版本握手"></a>协议版本握手</h4><p>​		握手开始于服务器向客户端发送协议版本消息。这让客户端知道服务器支持的最高RFB协议版本号。然后，客户机回复类似的消息，给出实际应使用的协议版本号（可能与服务器引用的版本号不同）。客户机不应请求高于服务器提供的协议版本。客户机和服务器都可以通过这种机制提供某种程度的向后兼容性。</p>
+<p>​		目前唯一发布的协议版本是3.3、3.7和3.8。其他版本号由一些服务器和客户端报告，但应解释为3.3，因为它们在3.7或3.8中没有实现不同的握手。添加新的编码或伪编码类型不需要更改协议版本，因为服务器可以忽略它不理解的编码。</p>
+<p>​		ProtocolVersion消息由12个字节组成，解释为格式为“RFB xxx.yyy\n”的ASCII字符字符串，其中xxx和yyy是主版本号和次版本号</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RFB 003.003\n（十六进制52 46 42 20 30 30 33 2e 30 30 33 0a）3.4版本</span><br><span class="line">RFB 003.007\n（十六进制52 46 42 20 30 30 33 2e 30 30 37 0a）3.7版本</span><br><span class="line">RFB 003.008\n（十六进制52 46 42 20 30 30 33 2e 30 30 38 0a）3.8版本</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="安全握手"><a href="#安全握手" class="headerlink" title="安全握手"></a>安全握手</h4><p>一旦确定了协议版本，服务器和客户端必须就连接上使用的安全类型达成一致。服务器列出了它支持的安全类型：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+--------------------------+-------------+--------------------------+</span><br><span class="line">| No. of bytes             | Type        | Description              |</span><br><span class="line">|                          | [Value]     |                          |</span><br><span class="line">+--------------------------+-------------+--------------------------+</span><br><span class="line">| 1                        | U8          | number-of-security-types |</span><br><span class="line">| number-of-security-types | U8 array    | security-types           |</span><br><span class="line">+--------------------------+-------------+--------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>如果服务器列出了客户端支持的至少一种有效的安全类型，则客户端会发回一个字节，指示要在连接上使用的安全类型：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+---------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description   |</span><br><span class="line">+--------------+--------------+---------------+</span><br><span class="line">| 1            | U8           | security-type |</span><br><span class="line">+--------------+--------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>如果安全类型数为零，则由于某种原因连接失败（例如，服务器无法支持所需的协议版本）。后面是一个描述原因的字符串（其中一个字符串指定为长度，后跟那么多ASCII字符）：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+---------------+--------------+---------------+</span><br><span class="line">| No. of bytes  | Type [Value] | Description   |</span><br><span class="line">+---------------+--------------+---------------+</span><br><span class="line">| 4             | U32          | reason-length |</span><br><span class="line">| reason-length | U8 array     | reason-string |</span><br><span class="line">+---------------+--------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>服务器在发送原因字符串后关闭连接。</p>
+<p>安全类型有：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+--------+--------------------+</span><br><span class="line">| Number | Name               |</span><br><span class="line">+--------+--------------------+</span><br><span class="line">| 0      | Invalid            |</span><br><span class="line">| 1      | None               |</span><br><span class="line">| 2      | VNC Authentication |</span><br><span class="line">+--------+--------------------+</span><br></pre></td></tr></table></figure>
+
+<p>还存在其他的安全类型，但没有公开记录</p>
+<p>确定了安全类型，就会进入安全结果握手阶段。</p>
+<h4 id="安全结果握手"><a href="#安全结果握手" class="headerlink" title="安全结果握手"></a>安全结果握手</h4><p>首先看看上面安全类型为None（不进行密码验证）的握手过程。</p>
+<p>由于不进行密码验证，所以当客户端和服务端在安全握手阶段确定了Node的安全类型后，服务端直接返回握手成功消息。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 4            | 0            | OK          |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<p>VNC Authentication 安全类型会在客户端进行连接时要求输入密码，服务端验证通过才能连接。但依然是不安全的。因为数据的传输是明文的，抓包软件就可以抓到。具体握手过程如下：</p>
+<p>服务器发送一个随机的16字节质询：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 16           | U8           | challenge   |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<p>客户端使用用户提供的密码作为密钥，使用DES对质询进行加密。要形成密钥，密码将被截断为八个字符，不足的话在右侧填充空字节。然后，客户端发送生成的16字节响应：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 16           | U8           | response    |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<p>服务端收到客户端的16字节响应后，用DES算法对其解密于指定的密码比较，从而判断用户输入的密码是否正确。</p>
+<p>当用户输入的密码正确，则发送握手成功消息</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 4            | 0            | OK          |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<p>否则发送握手失败消息,并在发送一个消息来说明为什么失败，然后关闭连接。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 4            | 1            | Failed      |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+---------------+--------------+---------------+</span><br><span class="line">| No. of bytes  | Type [Value] | Description   |</span><br><span class="line">+---------------+--------------+---------------+</span><br><span class="line">| 4             | U32          | reason-length |</span><br><span class="line">| reason-length | U8 array     | reason-string |</span><br><span class="line">+---------------+--------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>不管安全类型是什么，安全结果握手主要做的就是发送是否握手成功，上面两种安全类型都是如此。即：如果成功发送握手成功消息</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 4            | 0            | OK          |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<p>发送握手失败（密码不正确等）发送握手失败消息和失败原因说明，然后关闭来连接</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 4            | 1            | Failed      |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+---------------+--------------+---------------+</span><br><span class="line">| No. of bytes  | Type [Value] | Description   |</span><br><span class="line">+---------------+--------------+---------------+</span><br><span class="line">| 4             | U32          | reason-length |</span><br><span class="line">| reason-length | U8 array     | reason-string |</span><br><span class="line">+---------------+--------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="初始化消息"><a href="#初始化消息" class="headerlink" title="初始化消息"></a>初始化消息</h3><p>安全结果握手成功后，就进入初始化消息阶段，首先客户端发送一个ClientInit消息，然后服务端发送ServerInit消息，初始化阶段完成</p>
+<h4 id="ClientInit（客户端初始化消息）"><a href="#ClientInit（客户端初始化消息）" class="headerlink" title="ClientInit（客户端初始化消息）"></a>ClientInit（客户端初始化消息）</h4><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 1            | U8           | shared-flag |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<p>如果客户端自己连接上服务端后，也允许其他客户端连接这个服务端，那么shared-flag 为 1， 如果客户端向独占这个服务端，在它连接期间，不允许其他客户端连，shared-flag 为 0。</p>
+<h4 id="服务端初始化消息"><a href="#服务端初始化消息" class="headerlink" title="服务端初始化消息"></a>服务端初始化消息</h4><p>在接收到ClientInit消息后，服务器发送一条ServerInit消息。这会告诉客户端服务器帧缓冲区的宽度和高度、像素格式以及与桌面关联的名称：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+------------------------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description                  |</span><br><span class="line">+--------------+--------------+------------------------------+</span><br><span class="line">| 2            | U16          | framebuffer-width in pixels  |</span><br><span class="line">| 2            | U16          | framebuffer-height in pixels |</span><br><span class="line">| 16           | PIXEL_FORMAT | server-pixel-format          |</span><br><span class="line">| 4            | U32          | name-length                  |</span><br><span class="line">| name-length  | U8 array     | name-string                  |</span><br><span class="line">+--------------+--------------+------------------------------+</span><br></pre></td></tr></table></figure>
+
+<h5 id="像素格式结构"><a href="#像素格式结构" class="headerlink" title="像素格式结构"></a>像素格式结构</h5><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-----------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description     |</span><br><span class="line">+--------------+--------------+-----------------+</span><br><span class="line">| 1            | U8           | bits-per-pixel  |</span><br><span class="line">| 1            | U8           | depth           |</span><br><span class="line">| 1            | U8           | big-endian-flag |</span><br><span class="line">| 1            | U8           | true-color-flag |</span><br><span class="line">| 2            | U16          | red-max         |</span><br><span class="line">| 2            | U16          | green-max       |</span><br><span class="line">| 2            | U16          | blue-max        |</span><br><span class="line">| 1            | U8           | red-shift       |</span><br><span class="line">| 1            | U8           | green-shift     |</span><br><span class="line">| 1            | U8           | blue-shift      |</span><br><span class="line">| 3            |              | padding         |</span><br><span class="line">+--------------+--------------+-----------------+</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>bits-per-pixel：每个像素所占的bit数</li>
+<li>depth：表示在像素中有用的位数</li>
+<li>big-endian-flag：大端标志</li>
+<li>true-color-falg：真彩色标志，数字图像的表示方式，其他的还有索引颜色（一个索引代表一种颜色）等。</li>
+<li>red-max，green-max，blue-max：红，绿，蓝颜色通道的最大值</li>
+<li>red-shift，green-shift，blue-shift：红，绿，蓝三种颜色在像素中的起始bit距离像素开始位置的偏移bit数</li>
+<li>padding：填充，用于内存对齐</li>
+</ul>
+<h2 id="Client-to-Server-Messages（客户端到服务端消息）"><a href="#Client-to-Server-Messages（客户端到服务端消息）" class="headerlink" title="Client to Server Messages（客户端到服务端消息）"></a>Client to Server Messages（客户端到服务端消息）</h2><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">+--------+--------------------------+</span><br><span class="line">| Number | Name                     |</span><br><span class="line">+--------+--------------------------+</span><br><span class="line">| 0      | SetPixelFormat           |</span><br><span class="line">| 2      | SetEncodings             |</span><br><span class="line">| 3      | FramebufferUpdateRequest |</span><br><span class="line">| 4      | KeyEvent                 |</span><br><span class="line">| 5      | PointerEvent             |</span><br><span class="line">| 6      | ClientCutText            |</span><br><span class="line">+--------+--------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>存在其他消息类型，但未公开记录。</p>
+<h3 id="Set-Pixel-Format-消息"><a href="#Set-Pixel-Format-消息" class="headerlink" title="Set Pixel Format 消息"></a>Set Pixel Format 消息</h3><p>SetPixelFormat消息设置在服务器到客户端消息中（后面说）FramebufferUpdate消息中发送像素值的格式。如果客户端未发送SetPixelFormat消息，则服务器将按照上面服务器初始化时发送给客户端的消息格式发送像素值。</p>
+<p>如果真彩色标志为零（false），则表示将使用“颜色映射”。服务器可以使用SetColorMapEntries消息设置颜色映射中的任何条目。客户机发送此消息后，颜色映射的内容是未定义的，即使服务器以前已设置了条目。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description  |</span><br><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| 1            | U8 [0]       | message-type |</span><br><span class="line">| 3            |              | padding      |</span><br><span class="line">| 16           | PIXEL_FORMAT | pixel-format |</span><br><span class="line">+--------------+--------------+--------------+</span><br></pre></td></tr></table></figure>
+
+<p>颜色格式同上。</p>
+<h3 id="Set-Encodings-消息"><a href="#Set-Encodings-消息" class="headerlink" title="Set Encodings 消息"></a>Set Encodings 消息</h3><p>SetEncodings消息设置服务器可以发送像素数据的编码类型。此消息中给出的编码类型顺序是客户机对其首选项的提示（指定的第一种编码是最首选的）。服务器可能会也可能不会选择使用此提示。如果此处未明确指定，像素数据可能始终以原始编码发送。</p>
+<p>除了真正的编码之外，客户机还可以请求“伪编码（后面说）”向服务器声明它支持协议的某些扩展。不支持扩展的服务器将忽略伪编码。注意，这意味着客户机必须假设服务器不支持扩展，直到它从服务器获得一些特定于扩展的确认。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+---------------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description         |</span><br><span class="line">+--------------+--------------+---------------------+</span><br><span class="line">| 1            | U8 [2]       | message-type        |</span><br><span class="line">| 1            |              | padding             |</span><br><span class="line">| 2            | U16          | number-of-encodings |</span><br><span class="line">+--------------+--------------+---------------------+</span><br></pre></td></tr></table></figure>
+
+<p>后面是客户端发送的具体编码</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+---------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description   |</span><br><span class="line">+--------------+--------------+---------------+</span><br><span class="line">| 4            | S32          | encoding-type |</span><br><span class="line">+--------------+--------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="Framebuffer-Update-Request-消息"><a href="#Framebuffer-Update-Request-消息" class="headerlink" title="Framebuffer Update Request 消息"></a>Framebuffer Update Request 消息</h3><p>FramebufferUpdateRequest消息通知服务器客户端对由x位置、y位置、宽度和高度指定的帧缓冲区区域感兴趣。服务器通常通过发送FramebufferUpdate来响应FramebufferUpdateRequest。可以发送单个FramebufferUpdate以响应多个FrameBufferUpdateRequest。</p>
+<p>服务器假定客户端保留其感兴趣的帧缓冲区所有部分的副本。这意味着服务器通常只需要向客户端发送增量更新。</p>
+<p>如果客户端丢失了它所需的特定区域的内容，则客户端发送增量设置为零（false）的FramebufferUpdateRequest。这要求服务器尽快发送指定区域的全部内容。该区域将不会使用CopyRect编码(后面说)进行更新。</p>
+<p>如果客户端没有丢失它感兴趣的区域的任何内容，那么它将发送一个FramebufferUpdateRequest，增量设置为非零（true）。如果帧缓冲区的指定区域发生更改，服务器将发送帧缓冲区更新。请注意，FramebufferUpdateRequest和FramebufferUpdate之间可能有一段不确定的时间。</p>
+<p>对于快速客户端，客户端可能希望调整其发送增量FramebufferUpdateRequests的速率，以避免过多的网络流量。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description  |</span><br><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| 1            | U8 [3]       | message-type |</span><br><span class="line">| 1            | U8           | incremental  |</span><br><span class="line">| 2            | U16          | x-position   |</span><br><span class="line">| 2            | U16          | y-position   |</span><br><span class="line">| 2            | U16          | width        |</span><br><span class="line">| 2            | U16          | height       |</span><br><span class="line">+--------------+--------------+--------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="Key-Event-消息"><a href="#Key-Event-消息" class="headerlink" title="Key Event 消息"></a>Key Event 消息</h3><p>KeyEvent消息表示按键或释放。如果现在按下该键，则向下标志为非零（true），如果现在松开该键，则向下标志为零（false）。即使客户机或服务器未运行X窗口系统，也使用X窗口系统定义的“keysym”值指定密钥本身。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description  |</span><br><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| 1            | U8 [4]       | message-type |</span><br><span class="line">| 1            | U8           | down-flag    |</span><br><span class="line">| 2            |              | padding      |</span><br><span class="line">| 4            | U32          | key          |</span><br><span class="line">+--------------+--------------+--------------+</span><br></pre></td></tr></table></figure>
+
+<p>对于大多数普通键，keysym与相应的ASCII值相同。有关详细信息，请参阅[XLIBREF]或X Window系统发行版中的头文件&lt;X11&#x2F;keysymdef.h&gt;。其他一些常用键包括：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">+-----------------+--------------------+</span><br><span class="line">| Key name        | Keysym value (hex) |</span><br><span class="line">+-----------------+--------------------+</span><br><span class="line">| BackSpace       | 0xff08             |</span><br><span class="line">| Tab             | 0xff09             |</span><br><span class="line">| Return or Enter | 0xff0d             |</span><br><span class="line">| Escape          | 0xff1b             |</span><br><span class="line">| Insert          | 0xff63             |</span><br><span class="line">| Delete          | 0xffff             |</span><br><span class="line">| Home            | 0xff50             |</span><br><span class="line">| End             | 0xff57             |</span><br><span class="line">| Page Up         | 0xff55             |</span><br><span class="line">| Page Down       | 0xff56             |</span><br><span class="line">| Left            | 0xff51             |</span><br><span class="line">| Up              | 0xff52             |</span><br><span class="line">| Right           | 0xff53             |</span><br><span class="line">| Down            | 0xff54             |</span><br><span class="line">| F1              | 0xffbe             |</span><br><span class="line">| F2              | 0xffbf             |</span><br><span class="line">| F3              | 0xffc0             |</span><br><span class="line">| F4              | 0xffc1             |</span><br><span class="line">| ...             | ...                |</span><br><span class="line">| F12             | 0xffc9             |</span><br><span class="line">| Shift (left)    | 0xffe1             |</span><br><span class="line">| Shift (right)   | 0xffe2             |</span><br><span class="line">| Control (left)  | 0xffe3             |</span><br><span class="line">| Control (right) | 0xffe4             |</span><br><span class="line">| Meta (left)     | 0xffe7             |</span><br><span class="line">| Meta (right)    | 0xffe8             |</span><br><span class="line">| Alt (left)      | 0xffe9             |</span><br><span class="line">| Alt (right)     | 0xffea             |</span><br><span class="line">+-----------------+--------------------+</span><br></pre></td></tr></table></figure>
+
+<p>keysyms的解释是一个复杂的领域。为了尽可能广泛地进行互操作，应遵循以下准则：</p>
+<ul>
+<li>在解释键符号时，“Shift state”（即，Shift键符号中的任何一个是否被按下）只能用作提示。例如，在美国键盘上“#”字符会移位，但在英国键盘上则不会。使用美国键盘的服务器从使用英国键盘的客户端接收“#”字符时，不会发送任何shift键。在这种情况下，服务器可能在内部需要在其本地系统上模拟shift键，以便获得“#”字符而不是“3”。</li>
+<li>大写和小写键符之间的差异是很明显的。这与 X 窗口系统中的一些键盘处理不同，后者将它们视为相同。例如，服务器接收到一个大写的 ‘A’ 键符，而没有任何 shift 键按下，应该将其解释为一个大写的 ‘A’。这可能涉及内部模拟的 shift 键按下。</li>
+<li>服务器应尽可能忽略“锁定”键符号，如CapsLock和NumLock。相反，他们应该根据其大小写解释每个基于字符的keysym。</li>
+<li>与Shift不同，修改键（如Control和Alt）的状态应视为修改其他键符号的解释。请注意，ASCII控制字符（如Ctrl-A）没有键符号——这些字符应该由客户端先发送控制键，然后再发送“A”键来生成。</li>
+<li>在某些情况下，客户端中的修改键（例如 Control 和 Alt）也可以用于生成字符键符（即与字符关联的键码）。例如，在德国的 PC 键盘上，按下 Ctrl-Alt-Q 可以生成 ‘@’ 字符。在这种情况下，客户端需要发送额外的释放事件，以便正确地解释 ‘@’ 字符。这是因为对于服务器来说，Ctrl-Alt-@ 可能代表着完全不同的意义，因此需要确保键符的正确解释。</li>
+<li>在 X 窗口系统中，关于“反向制表符（backward tab）”并没有一个普遍的标准。在一些系统中，按下 shift+tab 会产生键符 “ISO_Left_Tab”，在另一些系统中会产生私有的 “BackTab” 键符，而在另一些系统中会产生 “Tab” 键符，并且应用程序会根据 shift 状态来确定它表示的是反向制表符还是正向制表符。在 RFB 协议中，更倾向于采用后一种方法。客户端应该生成一个带有 Shift 键的 Tab 键符，而不是 “ISO_Left_Tab”。然而，为了与现有客户端保持向后兼容，服务器也应该将 “ISO_Left_Tab” 解释为带有 Shift 键的 Tab。</li>
+<li>现代版本的 X 窗口系统支持用于 Unicode 字符的键符（keysyms），其中包括具有十六进制 1000000 位设置的 Unicode 字符。为了最大的兼容性，如果一个键同时具有 Unicode 和传统编码，客户端应发送传统编码。</li>
+<li>一些系统会对诸如 Ctrl-Alt-Delete 这样的键组合进行特殊解释。RFB（远程帧缓冲）客户端通常会提供一个菜单或工具栏功能，用于发送这样的键组合。RFB 协议并不对它们进行特殊处理；要发送 Ctrl-Alt-Delete，客户端发送左侧或右侧 Control、左侧或右侧 Alt 和 Delete 键的按下，然后发送释放按键的信息。许多 RFB 服务器接受 Shift-Ctrl-Alt-Delete 作为 Ctrl-Alt-Delete 的同义词，可以直接从键盘上输入。</li>
+</ul>
+<h3 id="Pointer-Event-消息"><a href="#Pointer-Event-消息" class="headerlink" title="Pointer Event 消息"></a>Pointer Event 消息</h3><p>鼠标事件的报文结构如下:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description  |</span><br><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| 1            | U8 [5]       | message-type |</span><br><span class="line">| 1            | U8           | button-mask  |</span><br><span class="line">| 2            | U16          | x-position   |</span><br><span class="line">| 2            | U16          | y-position   |</span><br><span class="line">+--------------+--------------+--------------+</span><br></pre></td></tr></table></figure>
+
+<p>其中, button-mask 表示鼠标按键按下的状态, button-mask 看作一个8位的二进制, 从0到7为每个二进制位编号(从低位到高位), 二进制 1表示鼠标被按下, 二进制 0 表示鼠标没有被按下, 编号为 1, 2, 3的位表示鼠标左键, 中键和右键.。例如：如果编号为1的二进制位为1, 表示鼠标左键被按下, 反之没有按下。如果编号为2的位为1，说明鼠标中键被按下，反之没被按下。编号为3的同理。如果编号1，2的为都为1，说明鼠标左键和中键都被按下，以此类推，不说了。如果鼠标带滚轮，如果向上滚动，由编号4的位控制，如果向下滚动，由编号为5的位控制。 </p>
+<p>x-position 和 y-position 表示鼠标的坐标</p>
+<h3 id="Client-Cut-Text-消息"><a href="#Client-Cut-Text-消息" class="headerlink" title="Client Cut Text 消息"></a>Client Cut Text 消息</h3><p>RFB为在客户端和服务器之间同步所选文本的“剪切缓冲区”提供了有限的支持。此消息告诉服务器，客户端的剪切缓冲区中有新的ISO 8859-1（Latin-1）文本。行尾仅由换行符（十六进制0a）表示。未使用回车符（十六进制0d）。无法将文本传输到Latin-1字符集之外。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description  |</span><br><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| 1            | U8 [6]       | message-type |</span><br><span class="line">| 3            |              | padding      |</span><br><span class="line">| 4            | U32          | length       |</span><br><span class="line">| length       | U8 array     | text         |</span><br><span class="line">+--------------+--------------+--------------+</span><br></pre></td></tr></table></figure>
+
+<p>总的来说，这个消息的作用就是讲客户端复制的文本可以在服务端进行粘贴。</p>
+<h2 id="Server-to-Client-Messages-（服务器到客户端消息）"><a href="#Server-to-Client-Messages-（服务器到客户端消息）" class="headerlink" title="Server to Client Messages （服务器到客户端消息）"></a>Server to Client Messages （服务器到客户端消息）</h2><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+--------+--------------------+</span><br><span class="line">| Number | Name               |</span><br><span class="line">+--------+--------------------+</span><br><span class="line">| 0      | FramebufferUpdate  |</span><br><span class="line">| 1      | SetColorMapEntries |</span><br><span class="line">| 2      | Bell               |</span><br><span class="line">| 3      | ServerCutText      |</span><br><span class="line">+--------+--------------------+</span><br></pre></td></tr></table></figure>
+
+<p>存在其他私有消息类型，但未公开记录。</p>
+<h3 id="Framebuffer-Update-消息"><a href="#Framebuffer-Update-消息" class="headerlink" title="Framebuffer Update 消息"></a>Framebuffer Update 消息</h3><p>帧缓冲区更新由一系列矩形像素数据组成，客户端应将这些数据放入其帧缓冲区。它是响应来自客户端的FramebufferUpdateRequest而发送的。请注意，FramebufferUpdateRequest和FramebufferUpdate之间可能有一段不确定的时间。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+----------------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description          |</span><br><span class="line">+--------------+--------------+----------------------+</span><br><span class="line">| 1            | U8 [0]       | message-type         |</span><br><span class="line">| 1            |              | padding              |</span><br><span class="line">| 2            | U16          | number-of-rectangles |</span><br><span class="line">+--------------+--------------+----------------------+</span><br></pre></td></tr></table></figure>
+
+<p>该消息头后面是 number-of-rectangles 个矩形的像素数据。每个矩形都以矩形头开始：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+---------------+</span><br><span class="line">  | No. of bytes | Type [Value] | Description   |</span><br><span class="line">  +--------------+--------------+---------------+</span><br><span class="line">  | 2            | U16          | x-position    |</span><br><span class="line">  | 2            | U16          | y-position    |</span><br><span class="line">  | 2            | U16          | width         |</span><br><span class="line">  | 2            | U16          | height        |</span><br><span class="line">  | 4            | S32          | encoding-type |</span><br><span class="line">  +--------------+--------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>主要说一下 encoding-type。为了进行高效的像素传输，可以对这些像素使用不同的编码（如压缩）来提供像素的传输效率。为了在客户端解析这些矩形的像素的时候，得知道它是由哪种编码进行传输的，以便进行解码。有关编码的内容后面说。</p>
+<h3 id="Set-Color-Map-Entries-消息"><a href="#Set-Color-Map-Entries-消息" class="headerlink" title="Set Color Map Entries 消息"></a>Set Color Map Entries 消息</h3><p>当像素格式使用“颜色映射”时，此消息告诉客户端指定的像素值应映射到给定的RGB值。请注意，此消息可能仅更新部分颜色映射。只有在客户端发送了至少一个FramebufferUpdateRequest之后，并且只有在商定的像素格式使用颜色映射时，服务器才应发送此消息。</p>
+<p>颜色映射值始终为16位，值的范围从0到65535，与使用的显示硬件无关。例如，白色的颜色贴图值为65535，65535，65535。</p>
+<p>消息以描述要更新的colormap条目范围的头开始：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+------------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description      |</span><br><span class="line">+--------------+--------------+------------------+</span><br><span class="line">| 1            | U8 [1]       | message-type     |</span><br><span class="line">| 1            |              | padding          |</span><br><span class="line">| 2            | U16          | first-color      |</span><br><span class="line">| 2            | U16          | number-of-colors |</span><br><span class="line">+--------------+--------------+------------------+</span><br></pre></td></tr></table></figure>
+
+<p>这个头后面跟着的是 number-of-colors 个 RGB 值, 每个值的格式如下:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description |</span><br><span class="line">+--------------+--------------+-------------+</span><br><span class="line">| 2            | U16          | red         |</span><br><span class="line">| 2            | U16          | green       |</span><br><span class="line">| 2            | U16          | blue        |</span><br><span class="line">+--------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="Bell-消息"><a href="#Bell-消息" class="headerlink" title="Bell 消息"></a>Bell 消息</h3><p>一个 “Bell” 消息会在客户端发出可听见的信号，如果客户端支持的话。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description  |</span><br><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| 1            | U8 [2]       | message-type |</span><br><span class="line">+--------------+--------------+--------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="Server-Cut-Text-消息"><a href="#Server-Cut-Text-消息" class="headerlink" title="Server Cut Text 消息"></a>Server Cut Text 消息</h3><p>服务器的剪切缓冲区中有新的ISO 8859-1（Latin-1）文本。行尾仅由换行符（十六进制0a）表示。未使用回车符（十六进制0d）。无法将文本传输到Latin-1字符集之外。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description  |</span><br><span class="line">+--------------+--------------+--------------+</span><br><span class="line">| 1            | U8 [3]       | message-type |</span><br><span class="line">| 3            |              | padding      |</span><br><span class="line">| 4            | U32          | length       |</span><br><span class="line">| length       | U8 array     | text         |</span><br><span class="line">+--------------+--------------+--------------+</span><br></pre></td></tr></table></figure>
+
+<p>总的来说就是在服务端复制的文字,可以粘贴到客户端所在的电脑。</p>
+<h2 id="Encodings-（编码）"><a href="#Encodings-（编码）" class="headerlink" title="Encodings （编码）"></a>Encodings （编码）</h2><p>这个就是上面说的对矩形像素进行编码的方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">+--------+-----------------------------+</span><br><span class="line">| Number | Name                        |</span><br><span class="line">+--------+-----------------------------+</span><br><span class="line">| 0      | Raw                         |</span><br><span class="line">| 1      | CopyRect                    |</span><br><span class="line">| 2      | RRE                         |</span><br><span class="line">| 5      | Hextile                     |</span><br><span class="line">| 15     | TRLE                        |</span><br><span class="line">| 16     | ZRLE                        |</span><br><span class="line">| -239   | Cursor pseudo-encoding      |</span><br><span class="line">| -223   | DesktopSize pseudo-encoding |</span><br><span class="line">+--------+-----------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>存在其他编码类型，但未公开记录。</p>
+<h3 id="Raw-Encoding"><a href="#Raw-Encoding" class="headerlink" title="Raw Encoding"></a>Raw Encoding</h3><p>最简单的编码类型是原始像素数据。在这种情况下，数据由宽度*高度个像素值组成（其中宽度和高度是矩形的宽度和高度）。一行一行的填充到像素数组中(如下面的报文格式)。所有RFB客户端必须能够处理这种原始编码的像素数据，而RFB服务器只应生成原始编码，除非客户端明确要求使用其他编码类型。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+----------------------------+--------------+-------------+</span><br><span class="line">| No. of bytes               | Type [Value] | Description |</span><br><span class="line">+----------------------------+--------------+-------------+</span><br><span class="line">| width*height*bytesPerPixel | PIXEL array  | pixels      |</span><br><span class="line">+----------------------------+--------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="CopyRect-Encoding"><a href="#CopyRect-Encoding" class="headerlink" title="CopyRect Encoding"></a>CopyRect Encoding</h3><p>CopyRect（复制矩形）编码是一种非常简单和高效的编码，当客户端在其帧缓冲区中的其他位置已经具有相同的像素数据时，可以使用这种编码。导线上的编码仅由X，Y坐标组成。这在帧缓冲区中提供了一个位置，客户端可以从中复制像素数据的矩形。这可以用于多种情况，最常见的情况是用户在屏幕上移动窗口，以及滚动窗口内容。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+--------------+--------------+----------------+</span><br><span class="line">| No. of bytes | Type [Value] | Description    |</span><br><span class="line">+--------------+--------------+----------------+</span><br><span class="line">| 2            | U16          | src-x-position |</span><br><span class="line">| 2            | U16          | src-y-position |</span><br><span class="line">+--------------+--------------+----------------+</span><br></pre></td></tr></table></figure>
+
+<p>为获得最大兼容性，CopyRect的源矩形不应包含由同一FramebufferUpdate消息中的先前条目更新的像素。否则, 可能服务端发过来的坐标上的像素可能被这次的FramebufferUpdate消息更改，导致复制的是错误的像素值。</p>
+
+      
+    </div>
+    
+    
+    <div class="article-category">
+      
+      
+      
+        <b>Tags:</b>
+        <a class="article-tag-none-link" href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/" rel="tag">网络协议</a>
+      
+    </div>
+    
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+    </div>
+  </div>
+  
+
+
+
+
+<div id="settings-container">
+  <div id="dark-mode">dark</div>
+  <hr>
+  <div id="sans-font">sans</div>
+</div>
+<script type="text/javascript">
+let d=document,r=d.documentElement.style,f=r.setProperty.bind(r),l=localStorage,s=l.getItem('s')||(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),n=l.getItem('n'),m=d.getElementById("dark-mode"),b=()=>{f('--bg-color','#fafafa');f('--code-bg-color','#f4f4f4');f('--text-color','#212121');f('--secondary-color','#808080');f('--tertiary-color','#b0b0b0');f('--link-color','#b5c8cf');f('--link-hover-color','#618794');f('--link-bg-color','#dae4e7');f('--selection-color','#dae4e7');m.innerHTML="dark"},c=()=>{f('--bg-color','#212121');f('--code-bg-color','#292929');f('--text-color','#bbb');f('--secondary-color','#707070');f('--tertiary-color','#6e6e6e');f('--link-color','#4d6b75');f('--link-hover-color','#96b1bb');f('--link-bg-color','#5d828e');f('--selection-color','#acc1c9');m.innerHTML="light"},o=d.getElementById("sans-font"),e=()=>{f('--body-stack','"Lora", "Georgia", "Times New Roman", serif');o.innerHTML="sans"},g=()=>{f('--body-stack','"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif');o.innerHTML="serif"};m.onclick=()=>{if(s==2){s=1;l.setItem('s',s);c()}else{s=2;l.setItem('s',s);b()}};o.onclick=()=>{if(n==2){n=1;l.setItem('n',n);g()}else{n=2;l.setItem('n',n);e()}};if(!s){s=2;l.setItem('s',2)};if(s==1){c()};if(!n){n=2;l.setItem('n',2)};if(n==1){g()};
+</script>
+
+
+
+
+</body>
+</html>

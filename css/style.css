@@ -41,7 +41,7 @@ body {
   margin: 3rem auto 10rem auto;
   max-width: 100%;
   padding: 1em;
-  width: 32em;
+  width: 45em;
 }
  
 @media all and (max-width:760px) {#wrapper {margin-top: 3rem;}}
@@ -173,7 +173,7 @@ body {
 
 .archive-article-date {
   position: absolute;
-  right: calc(100% - 1.5em);
+  right: calc(100% - 6em);
 }
 
 .archive-article-title {
@@ -182,7 +182,7 @@ body {
 
 .archive-article-title {
   font: inherit;
-  left: 2em;
+  left: 8em;
   letter-spacing: 0;
   margin: 0;
   max-width: calc(100vw - 6rem);
@@ -190,6 +190,10 @@ body {
   text-align: left;
   text-decoration: none;
   text-transform: none;
+}
+
+.archive-article-title:hover {
+  color: orange;
 }
 
 .article-nav {
@@ -417,14 +421,34 @@ td, th, table caption, table td, table th {
 }
 
 #settings-container {
-  background: var(--tertiary-color);
+  
+  background: var(--secondary-color);
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
   bottom: 0;
   position: fixed;
   right: 0;
 }
 
-#sans-font, #dark-mode {
+#sans-font {
   cursor: pointer;
-  float: right;
+  /* float: right; */
+  
+  padding: 0.5em;
+  
+}
+
+#sans-font:hover {
+  color: orange;
+}
+
+#dark-mode {
+  cursor: pointer;
+  /* float: right; */
   padding: 0.5em;
 }
+
+#dark-mode:hover {
+  color: orange;
+}
+
