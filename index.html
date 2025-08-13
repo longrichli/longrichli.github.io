@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta name="generator" content="Hugo 0.148.2">
+  <meta charset="utf-8">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="">
+  <script src="https://longrichli.github.io/js/quotes.js"></script>
+  <link rel="stylesheet" href="https://longrichli.github.io/css/dracula.css" type="text/css">
+  <link rel="alternate" type="application/rss+xml" href="https://longrichli.github.io/index.xml" title="RSS订阅">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet"
+    media="print" type="text/css" onload="this.media='all'">
+  
+
+  <title>
+    
+    
+     Longrichli&#39;s blog 
+    
+  </title>
+  <link rel="canonical" href="https://longrichli.github.io/">
+
+  <style>
+  * {
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+    font-family: 'Myriad Pro';
+    font-size: 17px;
+    line-height: 160%;
+    color: #1d1313;
+    max-width: 750px;
+    margin: auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border: none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify {
+    float: left;
+  }
+
+  .right-justify {
+    float: right;
+  }
+
+  pre,
+  code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,
+  q,
+  em,
+  dfn {
+    font-style: italic;
+  }
+
+  .sans,
+  html .gist .gist-file .gist-meta {
+    font-family: "Open Sans", "Myriad Pro", Myriad, sans-serif;
+  }
+
+  .mono,
+  pre,
+  code,
+  tt,
+  p code,
+  li code {
+    font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace;
+  }
+
+  .heading,
+  .serif,
+  h1,
+  h2,
+  h3 {
+    font-family: "Old Standard TT", serif;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  q:before {
+    content: "\201C";
+  }
+
+  q:after {
+    content: "\201D";
+  }
+
+  del,
+  s {
+    text-decoration: line-through;
+  }
+
+  blockquote {
+    font-family: "Old Standard TT", serif;
+    text-align: center;
+    padding: 50px;
+  }
+
+  blockquote p {
+    display: inline-block;
+    font-style: italic;
+  }
+
+  blockquote:before,
+  blockquote:after {
+    font-family: "Old Standard TT", serif;
+    content: '\201C';
+    font-size: 35px;
+    color: #403c3b;
+  }
+
+  blockquote:after {
+    content: '\201D';
+  }
+
+  hr {
+    width: 100%;
+    height: 1px;
+    background: #403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size: 35px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 22px;
+    margin-top: 18px;
+  }
+
+  h1 a,
+  h2 a,
+  h3 a {
+    text-decoration: none;
+  }
+
+  h1,
+  h2 {
+    margin-top: 28px;
+  }
+
+  #sub-header,
+  .date {
+    color: #403c3b;
+    font-size: 13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+    text-align: center;
+  }
+
+  #nav h1 a {
+    font-size: 35px;
+    color: #1d1313;
+    line-height: 120%;
+  }
+
+  .posts_listing a,
+  #nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+
+  ul li:before {
+    content: "\00BB \0020";
+  }
+
+  #nav ul li:before,
+  .posts_listing li:before {
+    content: '';
+    margin-right: 0;
+  }
+
+  #content {
+    text-align: left;
+    width: 100%;
+    font-size: 17px;
+    padding: 1px 0 80px;
+  }
+
+  #content h1,
+  #content h2 {
+    margin-bottom: 5px;
+  }
+
+  #content h2 {
+    font-size: 25px;
+  }
+
+  #content .entry-content {
+    margin-top: 15px;
+  }
+
+  #content .date {
+    margin-left: 3px;
+  }
+
+  #content h1 {
+    text-align: center;
+    font-size: 30px;
+  }
+
+  .highlight {
+    background-color: #6d6d6d;
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin: 0 0 50px;
+  }
+
+  .posts_listing li {
+    margin: 0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,
+  #nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align: center;
+    position: static;
+    margin-top: 60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type: none;
+    display: table-cell;
+    font-size: 15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right: 0.5em;
+    ;
+  }
+
+  #links :nth-child(2) {
+    margin-left: 0.5em;
+    ;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family: "Old Standard TT", serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  .tags {
+    list-style: none;
+     
+    padding: 0;
+    margin: 0;
+    display: flex;
+     
+    flex-wrap: wrap;
+     
+    gap: 8px;
+     
+  }
+
+  .tags li {
+    background-color: #f0f0f0;
+     
+    padding: 4px 10px;
+    border-radius: 12px;
+     
+    font-size: 0.9rem;
+  }
+
+  .tags li a {
+    color: #555;
+    text-decoration: none;
+  }
+
+  .tags li a:hover {
+    color: #1e90ff;
+     
+    text-decoration: underline;
+  }
+
+  table {
+    margin-top: 2em;
+    border-collapse: collapse;
+     
+    width: 100%;
+     
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid #ddd;
+     
+  }
+
+  th,
+  td {
+    padding: 8px;
+     
+    text-align: left;
+     
+  }
+
+  th {
+    background-color: #f2f2f2;
+     
+  }
+
+
+  .dark-mode *,
+  .dark-mode #nav h1 a {
+    color: #bbb;
+  }
+
+  .dark-mode body {
+    background: #212121;
+  }
+
+  .dark-mode pre,
+  .dark-mode code {
+    background-color: #262626;
+  }
+
+  .dark-mode #sub-header,
+  .dark-mode .date {
+    color: #8a8a8a;
+  }
+
+  .dark-mode hr {
+    background: #858585;
+  }
+
+  .dark-mode .article-entry {
+    line-height: 1.5;
+    margin-bottom: 1em;
+    overflow: visible;
+  }
+
+  .dark-mode .tags {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dark-mode .tags li {
+    background-color: #444;
+     
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  .dark-mode .tags li a {
+    color: #ddd;
+    text-decoration: none;
+  }
+
+  .dark-mode .tags li a:hover {
+    color: #66b3ff;
+    text-decoration: underline;
+  }
+
+  .dark-mode table {
+    margin-top: 2em;
+    border-collapse: collapse;
+    width: 100%;
+    color: #ddd;
+     
+  }
+
+  .dark-mode table,
+  th,
+  td {
+    border: 1px solid #555;
+     
+  }
+
+  .dark-mode th,
+  td {
+    padding: 8px;
+    text-align: left;
+  }
+
+  .dark-mode th {
+    background-color: #333;
+     
+    color: #eee;
+     
+  }
+
+  .dark-mode tr:nth-child(even) {
+    background-color: #2a2a2a;
+     
+  }
+
+  .dark-mode tr:nth-child(odd) {
+    background-color: #222;
+     
+  }
+
+  .tags li:before {
+    content: none !important;
+  }
+
+  #toggle-theme {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 14px;
+    z-index: 999;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #nav h1 a {
+      font-size: 28px;
+    }
+
+    #nav li {
+      font-size: 13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top: 0;
+      padding-top: 50px;
+      font-size: 15px;
+    }
+
+    .article-entry {
+      font-size: 15px;
+    }
+
+    #content h1 {
+      font-size: 25px;
+    }
+
+    #content h2 {
+      font-size: 22px;
+    }
+
+    .posts_listing li div {
+      font-size: 12px;
+    }
+
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #nav h1 a {
+      font-size: 22px;
+    }
+
+    #nav li {
+      font-size: 12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top: 0;
+      padding-top: 20px;
+      font-size: 15px;
+    }
+
+    .article-entry {
+      font-size: 15px;
+    }
+
+    #content h1 {
+      font-size: 20px;
+    }
+
+    #content h2 {
+      font-size: 18px;
+    }
+
+    .posts_listing li div {
+      font-size: 15px;
+    }
+  }
+
+
+   
+.rss-icon {
+  display: inline-block;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  margin: 5px;
+}
+
+.rss-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: #FF6600;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.rss-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #FF6600;
+  border-radius: 50%;
+  clip-path: polygon(0 0, 50% 0, 50% 50%, 0 50%);
+}
+
+.rss-wave {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  border: 2px solid #FF6600;
+  border-radius: 50%;
+  clip-path: polygon(0 0, 30% 0, 30% 30%, 0 30%);
+}
+</style>
+
+  
+  <link rel="alternate" type="application/rss+xml" href="https://longrichli.github.io/index.xml" title="Longrichli's blog" />
+  </head>
+
+<body>
+  <section id=nav>
+    <h1><a class="h-card" href="https://longrichli.github.io/">Longrichli&#39;s blog</a></h1>
+    <ul>
+      
+      <li><a href="https://longrichli.github.io/">首页</a></li>
+      
+      <li><a href="https://longrichli.github.io/archives/">归档</a></li>
+      
+      <li><a href="https://longrichli.github.io/index.xml">RSS</a></li>
+      
+    </ul>
+  </section>
+  <div>
+    <div style="margin-top: 2ex;">
+      
+      <div id="quote" class="article-entry">纸上得来终觉浅，绝知此事要躬行。</div>
+      <div id="author" class="article-entry">- 陆游 《冬夜读书示子聿》</div>
+    </div>
+    <hr style="width: 100%;">
+  </div>
+
+<section id=content>
+  <ul class=posts_listing>
+    
+      <li>
+        <h2 style="text-align: center;"><a href="https://longrichli.github.io/post/%E7%B5%95%E5%B0%8D%E7%9A%84%E8%87%AA%E7%94%B1%E5%B0%8E%E8%87%B4%E7%B5%95%E5%B0%8D%E7%9A%84%E8%85%90%E5%8C%96/">絕對的自由，導致絕對的腐化</a></h2>
+        <div style="text-align: center;" class=date>
+          
+            2025-08-12 00:31
+          
+        </div>
+        <div class="summary">
+         <p>絕對的自由，導致絕對的腐化。那天星期五，下午四點多，兒女都放學回來，白荷被她兒子麥可慶打了一耳光，因為她請麥可慶寫完功課再玩電腦，麥可慶堅持不寫。白荷立刻撥打113，對方給她一個協調機構的電話號碼，她跟一位輔導人員通上了話，得到一些口頭上的安慰，輔導人員也透過電話跟麥可慶溝通了一會兒，然後給白荷一個結論，她兒子已經國三，夠大了，只要沒有混幫派，她應該尊重兒子的選擇。雖然輔導人員說得很委婉，但白荷無法接受：「如果老大可以不做功課就玩電腦，老二怎麼會服氣？」輔導人員說不同年齡的孩子本來就有不同的對待方式，只能溝通，不能要求齊頭式的平等。白荷無奈，等到晚上老麥下班，夫妻兩人討論一番，決定第二天報警處理。</p>
+         <p style="text-align: center;"><a style="color: #767676;"  href="https://longrichli.github.io/post/%E7%B5%95%E5%B0%8D%E7%9A%84%E8%87%AA%E7%94%B1%E5%B0%8E%E8%87%B4%E7%B5%95%E5%B0%8D%E7%9A%84%E8%85%90%E5%8C%96/">阅读全文</a></p>
+        </div>
+
+      </li>
+    
+      <li>
+        <h2 style="text-align: center;"><a href="https://longrichli.github.io/post/%E7%B4%80%E5%BF%B5%E4%BA%A1%E5%8F%8B%E7%8E%8B%E5%9C%8B%E7%A5%A5%E5%90%9B/">白先勇◎樹猶如此－－－紀念亡友王國祥君</a></h2>
+        <div style="text-align: center;" class=date>
+          
+            2025-08-12 00:26
+          
+        </div>
+        <div class="summary">
+         <p>我家後院西隅近籬笆處曾經種有一排三株義大利柏樹。這種義大利柏樹(Italian Cypress)原本生長於南歐地中海畔，與其他松柏皆不相類。樹的主幹筆直上伸，標高至六、七十呎，但橫枝並不恣意擴張，兩人合抱，便把樹身圈住了，於是擎天一柱，平地拔起，碧森森像座碑塔，孤峭屹立，甚有氣勢。南加州濱海一帶的氣候，溫和似地中海，這類義大利柏樹，隨處可見。有的人家，深宅大院，柏樹密植成行，遠遠望去，一片蒼鬱，如同一堵高聳雲天的牆垣。</p>
+         <p style="text-align: center;"><a style="color: #767676;"  href="https://longrichli.github.io/post/%E7%B4%80%E5%BF%B5%E4%BA%A1%E5%8F%8B%E7%8E%8B%E5%9C%8B%E7%A5%A5%E5%90%9B/">阅读全文</a></p>
+        </div>
+
+      </li>
+    
+  </ul>
+</section>
+
+
+
+<dev id="toggle-theme">🌙</dev>
+<script src="https://longrichli.github.io/js/theme.js"></script>
+<script src="https://longrichli.github.io/js/clip.js"></script>
+</body>
+
+</html>
+
