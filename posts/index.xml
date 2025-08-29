@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Longrichli&#39;s blog</title>
-    <link>http://localhost:58149/posts/</link>
+    <link>https://longrichli.github.io/posts/</link>
     <description>Recent content in Posts on Longrichli&#39;s blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 30 Aug 2025 01:27:24 +0800</lastBuildDate>
-    <atom:link href="http://localhost:58149/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://longrichli.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hugo 使用教程</title>
-      <link>http://localhost:58149/posts/hugo%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</link>
+      <link>https://longrichli.github.io/posts/hugo%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</link>
       <pubDate>Sat, 30 Aug 2025 01:27:24 +0800</pubDate>
-      <guid>http://localhost:58149/posts/hugo%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</guid>
+      <guid>https://longrichli.github.io/posts/hugo%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</guid>
       <description>Hugo 是一个静态web网站生成器，记录一下它的使用方法。</description>
     </item>
   </channel>
