@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="">
+  <script src="https://longrichli.github.io/js/quotes.js"></script>
+  <link rel="stylesheet" href="https://longrichli.github.io/css/dracula.css" type="text/css">
+  <link rel="alternate" type="application/rss+xml" href="https://longrichli.github.io/index.xml" title="RSS订阅">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet"
+    media="print" type="text/css" onload="this.media='all'">
+  
+
+  <title>
+    
+    
+     Makefile编写指南 
+    
+  </title>
+  <link rel="canonical" href="https://longrichli.github.io/posts/makefile%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97/">
+
+  <style>
+  * {
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+    font-family: 'Myriad Pro';
+    font-size: 17px;
+    line-height: 160%;
+    color: #1d1313;
+    max-width: 750px;
+    margin: auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border: none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify {
+    float: left;
+  }
+
+  .right-justify {
+    float: right;
+  }
+
+  pre,
+  code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,
+  q,
+  em,
+  dfn {
+    font-style: italic;
+  }
+
+  .sans,
+  html .gist .gist-file .gist-meta {
+    font-family: "Open Sans", "Myriad Pro", Myriad, sans-serif;
+  }
+
+  .mono,
+  pre,
+  code,
+  tt,
+  p code,
+  li code {
+    font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace;
+  }
+
+  .heading,
+  .serif,
+  h1,
+  h2,
+  h3 {
+    font-family: "Old Standard TT", serif;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  q:before {
+    content: "\201C";
+  }
+
+  q:after {
+    content: "\201D";
+  }
+
+  del,
+  s {
+    text-decoration: line-through;
+  }
+
+  blockquote {
+    font-family: "Old Standard TT", serif;
+    text-align: center;
+    padding: 50px;
+  }
+
+  blockquote p {
+    display: inline-block;
+    font-style: italic;
+  }
+
+  blockquote:before,
+  blockquote:after {
+    font-family: "Old Standard TT", serif;
+    content: '\201C';
+    font-size: 35px;
+    color: #403c3b;
+  }
+
+  blockquote:after {
+    content: '\201D';
+  }
+
+  hr {
+    width: 100%;
+    height: 1px;
+    background: #403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size: 35px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 22px;
+    margin-top: 18px;
+  }
+
+  h1 a,
+  h2 a,
+  h3 a {
+    text-decoration: none;
+  }
+
+  h1,
+  h2 {
+    margin-top: 28px;
+  }
+
+  #sub-header,
+  .date {
+    color: #403c3b;
+    font-size: 13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+    text-align: center;
+  }
+
+  #nav h1 a {
+    font-size: 35px;
+    color: #1d1313;
+    line-height: 120%;
+  }
+
+  .posts_listing a,
+  #nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+
+  ul li:before {
+    content: "• ";
+  }
+
+  #nav ul li:before,
+  .posts_listing li:before {
+    content: '';
+    margin-right: 0;
+  }
+
+  #content {
+    text-align: left;
+    width: 100%;
+    font-size: 17px;
+    padding: 1px 0 80px;
+  }
+
+  #content h1,
+  #content h2 {
+    margin-bottom: 5px;
+  }
+
+  #content h2 {
+    font-size: 25px;
+  }
+
+  #content .entry-content {
+    margin-top: 15px;
+  }
+
+  #content .date {
+    margin-left: 3px;
+  }
+
+  #content h1 {
+    text-align: center;
+    font-size: 30px;
+  }
+
+  .highlight {
+    background-color: #6d6d6d;
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin: 0 0 50px;
+  }
+
+  .posts_listing li {
+    margin: 0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,
+  #nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align: center;
+    position: static;
+    margin-top: 60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type: none;
+    display: table-cell;
+    font-size: 15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right: 0.5em;
+    ;
+  }
+
+  #links :nth-child(2) {
+    margin-left: 0.5em;
+    ;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family: "Old Standard TT", serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  .tags {
+    list-style: none;
+     
+    padding: 0;
+    margin: 0;
+    display: flex;
+     
+    flex-wrap: wrap;
+     
+    gap: 8px;
+     
+  }
+
+  .tags li {
+    background-color: #f0f0f0;
+     
+    padding: 4px 10px;
+    border-radius: 12px;
+     
+    font-size: 0.9rem;
+  }
+
+  .tags li a {
+    color: #555;
+    text-decoration: none;
+  }
+
+  .tags li a:hover {
+    color: #1e90ff;
+     
+    text-decoration: underline;
+  }
+
+  table {
+    margin-top: 2em;
+    border-collapse: collapse;
+     
+    width: 100%;
+     
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid #ddd;
+     
+  }
+
+  th,
+  td {
+    padding: 8px;
+     
+    text-align: left;
+     
+  }
+
+  th {
+    background-color: #f2f2f2;
+     
+  }
+
+
+  .dark-mode *,
+  .dark-mode #nav h1 a {
+    color: #bbb;
+  }
+
+  .dark-mode body {
+    background: #212121;
+  }
+
+  .dark-mode pre,
+  .dark-mode code {
+    background-color: #262626;
+  }
+
+  .dark-mode #sub-header,
+  .dark-mode .date {
+    color: #8a8a8a;
+  }
+
+  .dark-mode hr {
+    background: #858585;
+  }
+
+  .dark-mode .article-entry {
+    line-height: 1.5;
+    margin-bottom: 1em;
+    overflow: visible;
+  }
+
+  .dark-mode .tags {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dark-mode .tags li {
+    background-color: #444;
+     
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  .dark-mode .tags li a {
+    color: #ddd;
+    text-decoration: none;
+  }
+
+  .dark-mode .tags li a:hover {
+    color: #66b3ff;
+    text-decoration: underline;
+  }
+
+  .dark-mode table {
+    margin-top: 2em;
+    border-collapse: collapse;
+    width: 100%;
+    color: #ddd;
+     
+  }
+
+  .dark-mode table,
+  th,
+  td {
+    border: 1px solid #555;
+     
+  }
+
+  .dark-mode th,
+  td {
+    padding: 8px;
+    text-align: left;
+  }
+
+  .dark-mode th {
+    background-color: #333;
+     
+    color: #eee;
+     
+  }
+
+  .dark-mode tr:nth-child(even) {
+    background-color: #2a2a2a;
+     
+  }
+
+  .dark-mode tr:nth-child(odd) {
+    background-color: #222;
+     
+  }
+
+  .tags li:before {
+    content: none !important;
+  }
+
+  #toggle-theme {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 14px;
+    z-index: 999;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #nav h1 a {
+      font-size: 28px;
+    }
+
+    #nav li {
+      font-size: 13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top: 0;
+      padding-top: 50px;
+      font-size: 15px;
+    }
+
+    .article-entry {
+      font-size: 15px;
+    }
+
+    #content h1 {
+      font-size: 25px;
+    }
+
+    #content h2 {
+      font-size: 22px;
+    }
+
+    .posts_listing li div {
+      font-size: 12px;
+    }
+
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #nav h1 a {
+      font-size: 22px;
+    }
+
+    #nav li {
+      font-size: 12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top: 0;
+      padding-top: 20px;
+      font-size: 15px;
+    }
+
+    .article-entry {
+      font-size: 15px;
+    }
+
+    #content h1 {
+      font-size: 20px;
+    }
+
+    #content h2 {
+      font-size: 18px;
+    }
+
+    .posts_listing li div {
+      font-size: 15px;
+    }
+  }
+
+</style>
+
+  </head>
+
+<body>
+  <section id=nav>
+    <h1><a class="h-card" href="https://longrichli.github.io/">Longrichli&#39;s blog</a></h1>
+    <ul>
+      
+      <li><a href="https://longrichli.github.io/">首页</a></li>
+      
+      <li><a href="https://longrichli.github.io/archives/">归档</a></li>
+      
+      <li><a href="https://longrichli.github.io/index.xml">RSS</a></li>
+      
+    </ul>
+  </section>
+  <div>
+    <div style="margin-top: 2ex;">
+      
+      <div id="quote" class="article-entry">纸上得来终觉浅，绝知此事要躬行。</div>
+      <div id="author" class="article-entry">- 陆游 《冬夜读书示子聿》</div>
+    </div>
+    <hr style="width: 100%;">
+  </div>
+
+<section id=content>
+  <h1> Makefile编写指南 </h1>
+
+
+  <div id="sub-header">
+    2025-08-30 23:16 · 
+    
+    
+    
+    9 minutes read
+  </div>
+
+
+  <div class="entry-content">
+    <h2 id="1-makefile-基础概念">1. <strong>Makefile 基础概念</strong></h2>
+<ol>
+<li>
+<p>Makefile 用于自动化编译、构建、测试、打包等任务。</p>
+</li>
+<li>
+<p><code>make</code> 工具会根据 <strong>Makefile</strong> 定义的规则执行任务。</p>
+</li>
+<li>
+<p>常见格式：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nf">target</span><span class="o">:</span> <span class="n">prerequisites</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">    <span class="nb">command</span>
+</span></span></code></pre></div><ul>
+<li><strong>target</strong>：目标，例如生成的文件或任务名。</li>
+<li><strong>prerequisites</strong>：依赖文件或其他目标。</li>
+<li><strong>command</strong>：执行的命令，必须以 <strong>Tab 键</strong> 开头。</li>
+</ul>
+</li>
+</ol>
+<h2 id="2-简单示例">2. <strong>简单示例</strong></h2>
+<p>假设有以下源文件：<code>main.c</code> 和 <code>functions.c</code>。</p>
+<h3 id="示例-makefile">示例 Makefile</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c"># 变量定义
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="c"></span><span class="nv">CC</span> <span class="o">=</span> gcc
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="nv">CFLAGS</span> <span class="o">=</span> -Wall -g
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="nv">TARGET</span> <span class="o">=</span> program
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nv">OBJECTS</span> <span class="o">=</span> main.o functions.o
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="c"># 默认目标
+</span></span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="c"></span><span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">TARGET</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="c"># 编译目标文件
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="c"></span><span class="nf">$(TARGET)</span><span class="o">:</span> <span class="k">$(</span><span class="nv">OBJECTS</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -o <span class="k">$(</span>TARGET<span class="k">)</span> <span class="k">$(</span>OBJECTS<span class="k">)</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">
+</span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="c"># 编译源文件为中间目标 (object 文件)
+</span></span></span><span class="line"><span class="ln">15</span><span class="cl"><span class="c"></span><span class="nf">main.o</span><span class="o">:</span> <span class="n">main</span>.<span class="n">c</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -c main.c
+</span></span><span class="line"><span class="ln">17</span><span class="cl">
+</span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="nf">functions.o</span><span class="o">:</span> <span class="n">functions</span>.<span class="n">c</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -c functions.c
+</span></span><span class="line"><span class="ln">20</span><span class="cl">
+</span></span><span class="line"><span class="ln">21</span><span class="cl"><span class="c"># 清理目标
+</span></span></span><span class="line"><span class="ln">22</span><span class="cl"><span class="c"></span><span class="nf">clean</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">	rm -f <span class="k">$(</span>TARGET<span class="k">)</span> <span class="k">$(</span>OBJECTS<span class="k">)</span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl">
+</span></span><span class="line"><span class="ln">25</span><span class="cl"><span class="c"># 伪目标：不生成文件
+</span></span></span><span class="line"><span class="ln">26</span><span class="cl"><span class="c"></span><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">clean</span>
+</span></span></code></pre></div><h3 id="执行流程">执行流程</h3>
+<ol>
+<li><strong>执行 <code>make</code> 命令</strong>：
+<ul>
+<li><code>make</code> 会查找默认目标 <code>all</code> 并执行相关依赖规则。</li>
+</ul>
+</li>
+<li><strong>编译生成目标文件</strong>：
+<ul>
+<li><code>main.c</code> 和 <code>functions.c</code> 会被编译为 <code>main.o</code> 和 <code>functions.o</code>。</li>
+</ul>
+</li>
+<li><strong>链接生成最终可执行文件</strong>：
+<ul>
+<li>链接中间文件，生成 <code>program</code>。</li>
+</ul>
+</li>
+<li><strong>执行 <code>make clean</code></strong>：
+<ul>
+<li>清理中间文件和目标文件。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="3-makefile-语法详解">3. <strong>Makefile 语法详解</strong></h2>
+<h3 id="31-变量">3.1 <strong>变量</strong></h3>
+<ul>
+<li>使用 <code>=</code> 定义变量。</li>
+<li>使用 <code>$(VAR)</code> 引用变量。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nv">CC</span> <span class="o">=</span> gcc
+</span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="nv">CFLAGS</span> <span class="o">=</span> -Wall -g
+</span></span></code></pre></div><h3 id="32-自动变量">3.2 <strong>自动变量</strong></h3>
+<ul>
+<li><code>$@</code>：表示目标文件名。</li>
+<li><code>$&lt;</code>：第一个依赖文件。</li>
+<li><code>$^</code>：所有依赖文件。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nf">$(TARGET)</span><span class="o">:</span> <span class="k">$(</span><span class="nv">OBJECTS</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -o <span class="nv">$@</span> $^
+</span></span></code></pre></div><h3 id="33-伪目标-phony">3.3 <strong>伪目标 (.PHONY)</strong></h3>
+<ul>
+<li>用于指定不会生成实际文件的目标，如 <code>clean</code>、<code>all</code>。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">clean</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="nf">clean</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl">	rm -f <span class="k">$(</span>TARGET<span class="k">)</span> <span class="k">$(</span>OBJECTS<span class="k">)</span>
+</span></span></code></pre></div><h3 id="34-模式规则">3.4 <strong>模式规则</strong></h3>
+<ul>
+<li>通过通配符简化规则，<code>%</code> 表示任意字符。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nf">%.o</span><span class="o">:</span> %.<span class="n">c</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -c $&lt; -o <span class="nv">$@</span>
+</span></span></code></pre></div><p>表示将所有 <code>.c</code> 文件编译成对应的 <code>.o</code> 文件。</p>
+<hr>
+<h2 id="4-makefile-进阶技巧">4. <strong>Makefile 进阶技巧</strong></h2>
+<h3 id="41-自动搜索依赖">4.1 <strong>自动搜索依赖</strong></h3>
+<p>使用 <code>-MMD</code> 选项自动生成依赖文件。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nv">CFLAGS</span> <span class="o">=</span> -Wall -g -MMD
+</span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="nf">-include $(OBJECTS</span><span class="o">:</span>.<span class="n">o</span>=.<span class="n">d</span>)
+</span></span></code></pre></div><h3 id="42-多目标编译">4.2 <strong>多目标编译</strong></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nf">all</span><span class="o">:</span> <span class="n">program</span>1 <span class="n">program</span>2
+</span></span><span class="line"><span class="ln">2</span><span class="cl">
+</span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="nf">program1</span><span class="o">:</span> <span class="n">program</span>1.<span class="n">c</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> -o program1 program1.c
+</span></span><span class="line"><span class="ln">5</span><span class="cl">
+</span></span><span class="line"><span class="ln">6</span><span class="cl"><span class="nf">program2</span><span class="o">:</span> <span class="n">program</span>2.<span class="n">c</span>
+</span></span><span class="line"><span class="ln">7</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> -o program2 program2.c
+</span></span></code></pre></div><h3 id="43-定义函数">4.3 <strong>定义函数</strong></h3>
+<p>使用 <code>define</code> 定义复杂操作。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="err">define</span> <span class="err">compile</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">	<span class="k">$(</span><span class="nv">CC</span><span class="k">)</span> <span class="k">$(</span><span class="nv">CFLAGS</span><span class="k">)</span> <span class="err">-c</span> <span class="err">$1.c</span> <span class="err">-o</span> <span class="err">$1.o</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="err">endef</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">
+</span></span><span class="line"><span class="ln">5</span><span class="cl"><span class="nf">main.o</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl">	<span class="k">$(</span>call compile, main<span class="k">)</span>
+</span></span></code></pre></div><hr>
+<h2 id="5-常用命令总结">5. <strong>常用命令总结</strong></h2>
+<table>
+  <thead>
+      <tr>
+          <th>命令</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>make</code></td>
+          <td>执行默认目标（第一个规则）</td>
+      </tr>
+      <tr>
+          <td><code>make target</code></td>
+          <td>执行指定目标</td>
+      </tr>
+      <tr>
+          <td><code>make clean</code></td>
+          <td>执行<code>clean</code>规则</td>
+      </tr>
+      <tr>
+          <td><code>make -jN</code></td>
+          <td>并行执行任务，N 表示线程数</td>
+      </tr>
+      <tr>
+          <td><code>make -n</code></td>
+          <td>只打印命令，不执行</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="6-示例执行过程">6. <strong>示例执行过程</strong></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl"><span class="c1"># 编译项目</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">make
+</span></span><span class="line"><span class="ln">3</span><span class="cl">
+</span></span><span class="line"><span class="ln">4</span><span class="cl"><span class="c1"># 执行清理</span>
+</span></span><span class="line"><span class="ln">5</span><span class="cl">make clean
+</span></span><span class="line"><span class="ln">6</span><span class="cl">
+</span></span><span class="line"><span class="ln">7</span><span class="cl"><span class="c1"># 使用多线程编译</span>
+</span></span><span class="line"><span class="ln">8</span><span class="cl">make -j4
+</span></span></code></pre></div><hr>
+<h2 id="7-基本示例">7. 基本示例</h2>
+<h3 id="71-编译makefile文件同级目录下的-c-文件">7.1 编译Makefile文件同级目录下的 .c 文件</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c"># 变量定义
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="c"></span><span class="nv">CC</span> <span class="o">=</span> gcc
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="nv">CFLAGS</span> <span class="o">=</span> -Wall -g
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="nv">TARGET</span> <span class="o">=</span> program
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="c"># 自动查找当前目录下的所有 .c 文件
+</span></span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="c"></span><span class="nv">SRCS</span> <span class="o">:=</span> <span class="k">$(</span>wildcard *.c<span class="k">)</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="nv">OBJS</span> <span class="o">:=</span> <span class="k">$(</span>SRCS:.c<span class="o">=</span>.o<span class="k">)</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="c"># 默认目标
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="c"></span><span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">TARGET</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">
+</span></span><span class="line"><span class="ln">13</span><span class="cl"><span class="c"># 链接目标文件
+</span></span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="c"></span><span class="nf">$(TARGET)</span><span class="o">:</span> <span class="k">$(</span><span class="nv">OBJS</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -o <span class="nv">$@</span> <span class="k">$(</span>OBJS<span class="k">)</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">
+</span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="c"># 编译 .c 文件为 .o 文件（模式规则）
+</span></span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="c"></span><span class="nf">%.o</span><span class="o">:</span> %.<span class="n">c</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -c $&lt; -o <span class="nv">$@</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl">
+</span></span><span class="line"><span class="ln">21</span><span class="cl"><span class="c"># 清理目标
+</span></span></span><span class="line"><span class="ln">22</span><span class="cl"><span class="c"></span><span class="nf">clean</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">	rm -f <span class="k">$(</span>TARGET<span class="k">)</span> <span class="k">$(</span>OBJS<span class="k">)</span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl">
+</span></span><span class="line"><span class="ln">25</span><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">clean</span>
+</span></span></code></pre></div><h3 id="72-编译makefile文件所在目录及子目录的c文件">7.2 编译Makefile文件所在目录及子目录的c文件</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c"># 变量定义
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="c"></span><span class="nv">CC</span> <span class="o">=</span> gcc
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="nv">CFLAGS</span> <span class="o">=</span> -Wall -g
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="nv">TARGET</span> <span class="o">=</span> program
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="c"># 查找当前目录及所有子目录中的 .c 文件
+</span></span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="c"></span><span class="nv">SRCS</span> <span class="o">:=</span> <span class="k">$(</span>shell find . -name <span class="s2">&#34;*.c&#34;</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="nv">OBJS</span> <span class="o">:=</span> <span class="k">$(</span>SRCS:.c<span class="o">=</span>.o<span class="k">)</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="c"># 默认目标
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="c"></span><span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">TARGET</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">
+</span></span><span class="line"><span class="ln">13</span><span class="cl"><span class="c"># 链接目标文件
+</span></span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="c"></span><span class="nf">$(TARGET)</span><span class="o">:</span> <span class="k">$(</span><span class="nv">OBJS</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -o <span class="nv">$@</span> <span class="k">$(</span>OBJS<span class="k">)</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">
+</span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="c"># 编译 .c 文件为 .o 文件（模式规则）
+</span></span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="c"></span><span class="nf">%.o</span><span class="o">:</span> %.<span class="n">c</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -c $&lt; -o <span class="nv">$@</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl">
+</span></span><span class="line"><span class="ln">21</span><span class="cl"><span class="c"># 清理目标
+</span></span></span><span class="line"><span class="ln">22</span><span class="cl"><span class="c"></span><span class="nf">clean</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">	rm -f <span class="k">$(</span>TARGET<span class="k">)</span> <span class="k">$(</span>OBJS<span class="k">)</span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl">
+</span></span><span class="line"><span class="ln">25</span><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">clean</span>
+</span></span></code></pre></div><h3 id="73-多个makefile编译">7.3 多个Makefile编译</h3>
+<ol>
+<li>假设项目目录结构如下：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="err">project/</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="err">├──</span> <span class="err">Makefile</span>           <span class="c"># 顶层 Makefile
+</span></span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="c"></span><span class="err">├──</span> <span class="err">main.c</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="err">├──</span> <span class="err">src/</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="err">│</span>   <span class="err">├──</span> <span class="err">Makefile</span>       <span class="c"># src 目录下的 Makefile
+</span></span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="c"></span><span class="err">│</span>   <span class="err">├──</span> <span class="err">func1.c</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="err">│</span>   <span class="err">└──</span> <span class="err">func2.c</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="err">└──</span> <span class="err">lib/</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">    <span class="err">├──</span> <span class="err">Makefile</span>       <span class="c"># lib 目录下的 Makefile
+</span></span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="c"></span>    ├── utils.c
+</span></span><span class="line"><span class="ln">11</span><span class="cl">    └── helper.c
+</span></span></code></pre></div><ol>
+<li>顶层 <code>Makefile</code></li>
+</ol>
+<p>顶层 <code>Makefile</code> 负责调用子目录中的 <code>Makefile</code> 并编译整个项目。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c"># 变量定义
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="c"></span><span class="nv">SUBDIRS</span> <span class="o">=</span> src lib
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="nv">CC</span> <span class="o">=</span> gcc
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="nv">CFLAGS</span> <span class="o">=</span> -Wall -g
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nv">TARGET</span> <span class="o">=</span> program
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="c"># 默认目标
+</span></span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="c"></span><span class="nf">all</span><span class="o">:</span> <span class="n">subdirs</span> <span class="k">$(</span><span class="nv">TARGET</span><span class="k">)</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="c"># 编译主程序
+</span></span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="c"></span><span class="nf">main.o</span><span class="o">:</span> <span class="n">main</span>.<span class="n">c</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -c main.c -o main.o
+</span></span><span class="line"><span class="ln">13</span><span class="cl">
+</span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="c"># 链接所有目标文件
+</span></span></span><span class="line"><span class="ln">15</span><span class="cl"><span class="c"></span><span class="nf">$(TARGET)</span><span class="o">:</span> <span class="n">main</span>.<span class="n">o</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">	@echo <span class="s2">&#34;Linking target: </span><span class="k">$(</span>TARGET<span class="k">)</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -o <span class="k">$(</span>TARGET<span class="k">)</span> main.o src/*.o lib/*.o
+</span></span><span class="line"><span class="ln">18</span><span class="cl">
+</span></span><span class="line"><span class="ln">19</span><span class="cl"><span class="c"># 递归编译子目录
+</span></span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="c"></span><span class="nf">subdirs</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl">	@for dir in <span class="k">$(</span>SUBDIRS<span class="k">)</span><span class="p">;</span> <span class="k">do</span> <span class="se">\
+</span></span></span><span class="line"><span class="ln">22</span><span class="cl"><span class="se"></span>		<span class="nb">echo</span> <span class="s2">&#34;Building in </span><span class="nv">$$</span><span class="s2">dir...&#34;</span><span class="p">;</span> <span class="se">\
+</span></span></span><span class="line"><span class="ln">23</span><span class="cl"><span class="se"></span>		<span class="k">$(</span>MAKE<span class="k">)</span> -C <span class="nv">$$</span>dir<span class="p">;</span> <span class="se">\
+</span></span></span><span class="line"><span class="ln">24</span><span class="cl"><span class="se"></span>	<span class="k">done</span>
+</span></span><span class="line"><span class="ln">25</span><span class="cl">
+</span></span><span class="line"><span class="ln">26</span><span class="cl"><span class="c"># 清理目标
+</span></span></span><span class="line"><span class="ln">27</span><span class="cl"><span class="c"></span><span class="nf">clean</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">28</span><span class="cl">	@for dir in <span class="k">$(</span>SUBDIRS<span class="k">)</span><span class="p">;</span> <span class="k">do</span> <span class="se">\
+</span></span></span><span class="line"><span class="ln">29</span><span class="cl"><span class="se"></span>		<span class="nb">echo</span> <span class="s2">&#34;Cleaning in </span><span class="nv">$$</span><span class="s2">dir...&#34;</span><span class="p">;</span> <span class="se">\
+</span></span></span><span class="line"><span class="ln">30</span><span class="cl"><span class="se"></span>		<span class="k">$(</span>MAKE<span class="k">)</span> -C <span class="nv">$$</span>dir clean<span class="p">;</span> <span class="se">\
+</span></span></span><span class="line"><span class="ln">31</span><span class="cl"><span class="se"></span>	<span class="k">done</span>
+</span></span><span class="line"><span class="ln">32</span><span class="cl">	rm -f <span class="k">$(</span>TARGET<span class="k">)</span> main.o
+</span></span><span class="line"><span class="ln">33</span><span class="cl">
+</span></span><span class="line"><span class="ln">34</span><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">clean</span> <span class="n">subdirs</span>
+</span></span></code></pre></div><ol>
+<li>子目录的 <code>Makefile</code></li>
+</ol>
+<p><code>s**rc/Makefile**</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nv">CC</span> <span class="o">=</span> gcc
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="nv">CFLAGS</span> <span class="o">=</span> -Wall -g
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="nv">OBJS</span> <span class="o">=</span> func1.o func2.o
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">OBJS</span><span class="k">)</span>%.<span class="n">o</span>: %.<span class="n">c</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -c $&lt; -o <span class="nv">$@</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="nf">clean</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">	rm -f <span class="k">$(</span>OBJS<span class="k">)</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">
+</span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">clean</span>
+</span></span></code></pre></div><p><strong><code>lib/Makefile</code></strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nv">CC</span> <span class="o">=</span> gcc
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="nv">CFLAGS</span> <span class="o">=</span> -Wall -g
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="nv">OBJS</span> <span class="o">=</span> utils.o helper.o
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">OBJS</span><span class="k">)</span>%.<span class="n">o</span>: %.<span class="n">c</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> -c $&lt; -o <span class="nv">$@</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="nf">clean</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">	rm -f <span class="k">$(</span>OBJS<span class="k">)</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">
+</span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">clean</span>
+</span></span></code></pre></div><ol>
+<li>工作原理</li>
+<li>顶层 <code>Makefile</code>：
+<ul>
+<li>定义了子目录 <code>SUBDIRS = src lib</code>。</li>
+<li>使用 <code>$(MAKE) -C</code> 命令进入子目录并执行子目录的 <code>Makefile</code>。</li>
+</ul>
+</li>
+<li><strong>递归编译</strong>：
+<ul>
+<li><code>$(MAKE) -C dir</code> 会在 <code>dir</code> 目录中执行 <code>make</code>。</li>
+<li>子目录的 <code>Makefile</code> 负责编译自己的 <code>.c</code> 文件并生成 <code>.o</code> 文件。</li>
+</ul>
+</li>
+<li><strong>主程序链接</strong>：
+<ul>
+<li>在顶层 <code>Makefile</code> 中，链接主程序的 <code>main.o</code> 和子目录生成的所有 <code>.o</code> 文件，生成最终的可执行文件。</li>
+</ul>
+</li>
+<li><strong>清理目标</strong>：
+<ul>
+<li><code>make clean</code> 会递归调用子目录的 <code>Makefile</code> 中的 <code>clean</code> 目标，删除所有中间文件。</li>
+</ul>
+</li>
+</ol>
+<p>end.</p>
+
+  </div>
+  <div>
+    
+    <ul class="tags">
+      
+      <li><a href="https://longrichli.github.io/tags/make">make</a></li>
+      
+      <li><a href="https://longrichli.github.io/tags/makefile">Makefile</a></li>
+      
+      <li><a href="https://longrichli.github.io/tags/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">使用教程</a></li>
+      
+    </ul>
+    
+  </div>
+  <hr>
+  <div id=links>
+    
+    <a href="https://longrichli.github.io/posts/gcc%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">&laquo;&nbsp;gcc使用教程</a>
+    
+    
+  </div>
+</section>
+<script src="https://utteranc.es/client.js"
+        repo="longrichli/blog-comments"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-JHKFGEGXJ0"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-JHKFGEGXJ0');
+        }
+      </script>
+
+<dev id="toggle-theme">🌙</dev>
+<script src="https://longrichli.github.io/js/theme.js"></script>
+<script src="https://longrichli.github.io/js/clip.js"></script>
+</body>
+
+</html>

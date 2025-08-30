@@ -6,10 +6,24 @@
     <description>Recent content in Posts on Longrichli&#39;s blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 30 Aug 2025 01:27:24 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 30 Aug 2025 23:16:41 +0800</lastBuildDate>
     <atom:link href="https://longrichli.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Hugo 使用教程</title>
+      <title>Makefile编写指南</title>
+      <link>https://longrichli.github.io/posts/makefile%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Sat, 30 Aug 2025 23:16:41 +0800</pubDate>
+      <guid>https://longrichli.github.io/posts/makefile%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97/</guid>
+      <description>本文介绍了makefile文件是什么，以及编写方法。给出单个Makefile文件编译示例和多个Makefile文件编译示例</description>
+    </item>
+    <item>
+      <title>gcc使用教程</title>
+      <link>https://longrichli.github.io/posts/gcc%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</link>
+      <pubDate>Sat, 30 Aug 2025 22:41:00 +0800</pubDate>
+      <guid>https://longrichli.github.io/posts/gcc%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</guid>
+      <description>本文介绍了gcc命令常用的参数，c文件到可执行文件的过程，静态库和共享库的介绍、制作和使用。</description>
+    </item>
+    <item>
+      <title>hugo使用教程</title>
       <link>https://longrichli.github.io/posts/hugo%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</link>
       <pubDate>Sat, 30 Aug 2025 01:27:24 +0800</pubDate>
       <guid>https://longrichli.github.io/posts/hugo%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</guid>

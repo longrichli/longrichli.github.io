@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>动态库 on Longrichli&#39;s blog</title>
+    <link>https://longrichli.github.io/tags/%E5%8A%A8%E6%80%81%E5%BA%93/</link>
+    <description>Recent content in 动态库 on Longrichli&#39;s blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 30 Aug 2025 22:41:00 +0800</lastBuildDate>
+    <atom:link href="https://longrichli.github.io/tags/%E5%8A%A8%E6%80%81%E5%BA%93/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>gcc使用教程</title>
+      <link>https://longrichli.github.io/posts/gcc%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</link>
+      <pubDate>Sat, 30 Aug 2025 22:41:00 +0800</pubDate>
+      <guid>https://longrichli.github.io/posts/gcc%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</guid>
+      <description>本文介绍了gcc命令常用的参数，c文件到可执行文件的过程，静态库和共享库的介绍、制作和使用。</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Makefile on Longrichli&#39;s blog</title>
+    <link>https://longrichli.github.io/tags/makefile/</link>
+    <description>Recent content in Makefile on Longrichli&#39;s blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 30 Aug 2025 23:16:41 +0800</lastBuildDate>
+    <atom:link href="https://longrichli.github.io/tags/makefile/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Makefile编写指南</title>
+      <link>https://longrichli.github.io/posts/makefile%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Sat, 30 Aug 2025 23:16:41 +0800</pubDate>
+      <guid>https://longrichli.github.io/posts/makefile%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97/</guid>
+      <description>本文介绍了makefile文件是什么，以及编写方法。给出单个Makefile文件编译示例和多个Makefile文件编译示例</description>
+    </item>
+  </channel>
+</rss>
