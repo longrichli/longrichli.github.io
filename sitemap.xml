@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://longrichli.github.io/tags/hugo/</loc>
+    <lastmod>2025-08-30T01:27:24+08:00</lastmod>
+  </url><url>
     <loc>https://longrichli.github.io/posts/hugo%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</loc>
     <lastmod>2025-08-30T01:27:24+08:00</lastmod>
   </url><url>
@@ -11,8 +14,12 @@
     <loc>https://longrichli.github.io/posts/</loc>
     <lastmod>2025-08-30T01:27:24+08:00</lastmod>
   </url><url>
-    <loc>https://longrichli.github.io/categories/</loc>
-  </url><url>
     <loc>https://longrichli.github.io/tags/</loc>
+    <lastmod>2025-08-30T01:27:24+08:00</lastmod>
+  </url><url>
+    <loc>https://longrichli.github.io/tags/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</loc>
+    <lastmod>2025-08-30T01:27:24+08:00</lastmod>
+  </url><url>
+    <loc>https://longrichli.github.io/categories/</loc>
   </url>
 </urlset>
