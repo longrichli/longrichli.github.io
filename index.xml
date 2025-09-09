@@ -6,8 +6,15 @@
     <description>Recent content on Longrichli&#39;s blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 30 Aug 2025 23:16:41 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 04 Sep 2025 01:25:35 +0800</lastBuildDate>
     <atom:link href="https://longrichli.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>滋味</title>
+      <link>https://longrichli.github.io/posts/%E6%BB%8B%E5%91%B3/</link>
+      <pubDate>Thu, 04 Sep 2025 01:25:35 +0800</pubDate>
+      <guid>https://longrichli.github.io/posts/%E6%BB%8B%E5%91%B3/</guid>
+      <description>要说天底下难办的事，每天到了饭点吃什么得算一样，对于我这种没见过大世面，吃不起山珍海味的普通人来说尤为如此。每到了要吃饭的时候，就抿抿嘴，寻思吃什么好，思来想去，只好在米面之中选一样凑合了事。</description>
+    </item>
     <item>
       <title>Makefile编写指南</title>
       <link>https://longrichli.github.io/posts/makefile%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97/</link>
