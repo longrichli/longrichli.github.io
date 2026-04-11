@@ -221,6 +221,16 @@
     font-size: 13px;
   }
 
+  #sub-header a {
+    color: #403c3b;
+    text-decoration: none;
+  }
+
+  #sub-header a:hover {
+    text-decoration: underline;
+    color: #1e90ff;
+  }
+
   #sub-header {
     margin: 0 4px;
     text-align: center;
@@ -614,6 +624,10 @@
       
       <li><a href="https://longrichli.github.io/">首页</a></li>
       
+      <li><a href="https://longrichli.github.io/categories/">分类</a></li>
+      
+      <li><a href="https://longrichli.github.io/tags/">标签</a></li>
+      
       <li><a href="https://longrichli.github.io/archives/">归档</a></li>
       
       <li><a href="https://longrichli.github.io/index.xml">RSS</a></li>
@@ -636,9 +650,15 @@
   <div id="sub-header">
     2025-08-30 23:16 · 
     
+      
+        
+        <a href="https://longrichli.github.io/categories/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">使用教程</a>
+       ·
     
     
-    9 minutes read
+    
+    
+    12 minutes read
   </div>
 
 
@@ -968,6 +988,67 @@
 </ul>
 </li>
 </ol>
+<h2 id="8-make-原理">8. make 原理</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nx">build</span><span class="p">(</span><span class="nx">foo</span><span class="p">)</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">    <span class="k">if</span> <span class="nx">foo</span> <span class="nx">是</span> <span class="nx">PHONY</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">        <span class="nx">执行</span> <span class="nx">foo</span> <span class="nx">的命令</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">    <span class="k">if</span> <span class="nx">foo</span> <span class="nx">不存在</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">        <span class="nx">需要构建</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">    <span class="nx">对</span> <span class="nx">foo</span> <span class="nx">的每个依赖</span> <span class="nx">dep</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">        <span class="nx">build</span><span class="p">(</span><span class="nx">dep</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">        <span class="k">if</span> <span class="nx">dep</span> <span class="nx">比</span> <span class="nx">foo</span> <span class="nx">新</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">            <span class="nx">需要构建</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">
+</span></span><span class="line"><span class="ln">14</span><span class="cl">    <span class="nx">如果需要构建</span><span class="o">:</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">        <span class="nx">执行</span> <span class="nx">foo</span> <span class="nx">的命令</span>
+</span></span></code></pre></div><p><code>make</code> 的核心判断逻辑只有一句话：</p>
+<blockquote>
+<p>目标如果是文件，并且它“已经是最新的”，就什么也不做。</p></blockquote>
+<p>“最新”的标准是：</p>
+<ul>
+<li>目标文件存在</li>
+<li>并且它比所有依赖都新（时间戳）</li>
+</ul>
+<p><code>.PHONY</code> 的真实作用</p>
+<p><code>.PHONY</code> 的核心作用有三层：</p>
+<ol>
+<li>告诉 make：这是“动作”，不是“产物”</li>
+</ol>
+<p>比如：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">all</span> <span class="n">clean</span> <span class="n">install</span> <span class="n">test</span>
+</span></span></code></pre></div><p>这些目标的语义是：</p>
+<ul>
+<li>all：构建一切</li>
+<li>clean：清理</li>
+<li>install：安装</li>
+<li>test：跑测试</li>
+</ul>
+<p>它们<strong>没有对应文件</strong>。</p>
+<hr>
+<ol start="2">
+<li>禁用时间戳判断</li>
+</ol>
+<p>没有 <code>.PHONY</code>：</p>
+<ul>
+<li>make 会做 stat()</li>
+<li>比较 mtime</li>
+<li>可能跳过执行</li>
+</ul>
+<p>有 <code>.PHONY</code>：</p>
+<ul>
+<li>make <strong>无条件执行 recipe</strong></li>
+</ul>
+<hr>
+<ol start="3">
+<li>提升可读性</li>
+</ol>
+<p>看到：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-makefile" data-lang="makefile"><span class="line"><span class="ln">1</span><span class="cl"><span class="nf">.PHONY</span><span class="o">:</span> <span class="n">clean</span>
+</span></span></code></pre></div><p>就知道：
+这是命令的入口，而不是生成文件的规则</p>
 <p>end.</p>
 
   </div>
@@ -979,18 +1060,16 @@
       
       <li><a href="https://longrichli.github.io/tags/makefile">Makefile</a></li>
       
-      <li><a href="https://longrichli.github.io/tags/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">使用教程</a></li>
-      
     </ul>
     
   </div>
   <hr>
   <div id=links>
     
-    <a href="https://longrichli.github.io/posts/gcc%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">&laquo;&nbsp;gcc使用教程</a>
+    <a href="https://longrichli.github.io/posts/%E6%BB%8B%E5%91%B3/">滋味&laquo;&nbsp;</a>
     
     
-    <a href="https://longrichli.github.io/posts/%E6%BB%8B%E5%91%B3/">滋味&nbsp;&raquo;</a>
+    <a href="https://longrichli.github.io/posts/gcc%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">&nbsp;&raquo;gcc使用教程</a>
     
   </div>
 </section>

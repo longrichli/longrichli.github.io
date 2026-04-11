@@ -19,10 +19,10 @@
   <title>
     
     
-    标签
+     VS Code配置调试环境 
     
   </title>
-  <link rel="canonical" href="http://localhost:1313/tags/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
+  <link rel="canonical" href="http://localhost:1313/posts/vs-code%E9%85%8D%E7%BD%AE%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/">
 
   <style>
   * {
@@ -605,8 +605,6 @@
 
 </style>
 
-  
-  <link rel="alternate" type="application/rss+xml" href="http://localhost:1313/tags/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/index.xml" title="Longrichli's blog" />
   </head>
 
 <body>
@@ -635,44 +633,108 @@
     <hr style="width: 100%;">
   </div>
 
-<section id="content">
-  <ul class="posts_listing" style="list-style:none; padding-left:0;">
+<section id=content>
+  <h1> VS Code配置调试环境 </h1>
+
+
+  <div id="sub-header">
+    2026-04-11 16:20 · 
     
-      <li style="margin-bottom: 8px; font-size: 1rem;">
-        <span style="color:#888; width:120px; display:inline-block;">
-          
-            2025-08-30
-          
-        </span>
-        <a href="http://localhost:1313/posts/makefile%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97/" style="text-decoration:none;">
-          Makefile编写指南
-        </a>
-      </li>
     
-      <li style="margin-bottom: 8px; font-size: 1rem;">
-        <span style="color:#888; width:120px; display:inline-block;">
-          
-            2025-08-30
-          
-        </span>
-        <a href="http://localhost:1313/posts/gcc%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" style="text-decoration:none;">
-          gcc使用教程
-        </a>
-      </li>
     
-      <li style="margin-bottom: 8px; font-size: 1rem;">
-        <span style="color:#888; width:120px; display:inline-block;">
-          
-            2025-08-30
-          
-        </span>
-        <a href="http://localhost:1313/posts/hugo%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" style="text-decoration:none;">
-          hugo使用教程
-        </a>
-      </li>
+    2 minutes read
+  </div>
+
+
+  <div class="entry-content">
+    <h3 id="1-安装cc插件">1. 安装c/c++插件</h3>
+<p><img src="attachment:66404907-4143-43dc-8ddb-2f031abc7ee6:image.png" alt="image.png"></p>
+<h3 id="2-编写debug配置文件">2. 编写debug配置文件</h3>
+<ol>
+<li>点击debug按钮，然后点击 create a launch.json file 链接 ，如下图所示</li>
+</ol>
+<p><img src="attachment:35b30292-4ed0-4e7c-900d-9ddb631e4b96:image.png" alt="image.png"></p>
+<p>2， vs code 会创建 launch.json 文件</p>
+<p><img src="attachment:8c2aa289-c378-46ed-8bc7-fb97cb3224a4:image.png" alt="image.png"></p>
+<ol>
+<li>点击 add configuration 按钮</li>
+</ol>
+<p><img src="attachment:bd330182-438b-4828-b1a0-85c7ecebc030:image.png" alt="image.png"></p>
+<ol>
+<li>点击 gdb launch 后， vs code会自动补全配置</li>
+</ol>
+<p><img src="attachment:b9aed8ee-e31b-469e-87f9-f7004a5dc26b:%E6%88%AA%E5%B1%8F2026-03-16_22.53.09.png" alt="截屏2026-03-16 22.53.09.png"></p>
+<p>补全后如下所示</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">    <span class="c1">// Use IntelliSense to learn about possible attributes.
+</span></span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="c1"></span>    <span class="c1">// Hover to view descriptions of existing attributes.
+</span></span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="c1"></span>    <span class="c1">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+</span></span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="c1"></span>    <span class="s2">&#34;version&#34;</span><span class="o">:</span> <span class="s2">&#34;0.2.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">    <span class="s2">&#34;configurations&#34;</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">            <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;(gdb) Launch&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">            <span class="s2">&#34;type&#34;</span><span class="o">:</span> <span class="s2">&#34;cppdbg&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">            <span class="s2">&#34;request&#34;</span><span class="o">:</span> <span class="s2">&#34;launch&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">            <span class="s2">&#34;program&#34;</span><span class="o">:</span> <span class="s2">&#34;enter program name, for example ${workspaceFolder}/a.out&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">            <span class="s2">&#34;args&#34;</span><span class="o">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">            <span class="s2">&#34;stopAtEntry&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">            <span class="s2">&#34;cwd&#34;</span><span class="o">:</span> <span class="s2">&#34;${fileDirname}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl">            <span class="s2">&#34;environment&#34;</span><span class="o">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">            <span class="s2">&#34;externalConsole&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl">            <span class="s2">&#34;MIMode&#34;</span><span class="o">:</span> <span class="s2">&#34;gdb&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">18</span><span class="cl">            <span class="s2">&#34;setupCommands&#34;</span><span class="o">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl">                    <span class="s2">&#34;description&#34;</span><span class="o">:</span> <span class="s2">&#34;Enable pretty-printing for gdb&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl">                    <span class="s2">&#34;text&#34;</span><span class="o">:</span> <span class="s2">&#34;-enable-pretty-printing&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">22</span><span class="cl">                    <span class="s2">&#34;ignoreFailures&#34;</span><span class="o">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">                <span class="p">},</span>
+</span></span><span class="line"><span class="ln">24</span><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="ln">25</span><span class="cl">                    <span class="s2">&#34;description&#34;</span><span class="o">:</span> <span class="s2">&#34;Set Disassembly Flavor to Intel&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">26</span><span class="cl">                    <span class="s2">&#34;text&#34;</span><span class="o">:</span> <span class="s2">&#34;-gdb-set disassembly-flavor intel&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">27</span><span class="cl">                    <span class="s2">&#34;ignoreFailures&#34;</span><span class="o">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="ln">28</span><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="ln">29</span><span class="cl">            <span class="p">]</span>
+</span></span><span class="line"><span class="ln">30</span><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="ln">31</span><span class="cl">
+</span></span><span class="line"><span class="ln">32</span><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="ln">33</span><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><ol>
+<li>在json中设置好程序的路径和参数和程序工作路径</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln">1</span><span class="cl">            <span class="s2">&#34;program&#34;</span><span class="o">:</span> <span class="s2">&#34;程序路径&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">            <span class="s2">&#34;args&#34;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&#34;参数1&#34;</span><span class="p">,</span> <span class="s2">&#34;参数2&#34;</span><span class="p">,</span> <span class="s2">&#34;...&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl">            <span class="err">“</span><span class="nx">cwd</span><span class="err">”</span><span class="o">:</span><span class="s2">&#34;程序工作路径&#34;</span>
+</span></span></code></pre></div><ol start="6">
+<li>点击菜单栏的Run菜单下面的Start Debugging 调试即可</li>
+</ol>
+<p><img src="attachment:c75e9ce2-d292-44ea-913f-32c91b5a4d4e:image.png" alt="image.png"></p>
+<ol>
+<li>使用技巧</li>
+</ol>
+<ul>
+<li>打断点后，鼠标右键点击断点可以编辑条件断点</li>
+<li>debug console 中 输入 -exec <!-- raw HTML omitted --> 可以执行gdb调试命令</li>
+</ul>
+
+  </div>
+  <div>
     
-  </ul>
+  </div>
+  <hr>
+  <div id=links>
+    
+    <a href="http://localhost:1313/posts/%E9%87%8D%E6%8B%BE%E5%8D%9A%E5%AE%A2/">&laquo;&nbsp;重拾博客</a>
+    
+    
+  </div>
 </section>
+<script src="https://utteranc.es/client.js"
+        repo="longrichli/blog-comments"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
 
 
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-JHKFGEGXJ0"></script>
