@@ -6,8 +6,29 @@
     <description>Recent content in Tags on Longrichli&#39;s blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 12 Apr 2026 15:58:16 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 13 Apr 2026 22:53:49 +0800</lastBuildDate>
     <atom:link href="https://longrichli.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Debug</title>
+      <link>https://longrichli.github.io/tags/debug/</link>
+      <pubDate>Mon, 13 Apr 2026 22:53:49 +0800</pubDate>
+      <guid>https://longrichli.github.io/tags/debug/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>GDB</title>
+      <link>https://longrichli.github.io/tags/gdb/</link>
+      <pubDate>Mon, 13 Apr 2026 22:53:49 +0800</pubDate>
+      <guid>https://longrichli.github.io/tags/gdb/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>VS Code</title>
+      <link>https://longrichli.github.io/tags/vs-code/</link>
+      <pubDate>Mon, 13 Apr 2026 22:53:49 +0800</pubDate>
+      <guid>https://longrichli.github.io/tags/vs-code/</guid>
+      <description></description>
+    </item>
     <item>
       <title>拔牙</title>
       <link>https://longrichli.github.io/tags/%E6%8B%94%E7%89%99/</link>
@@ -65,7 +86,7 @@
       <description></description>
     </item>
     <item>
-      <title>Gcc</title>
+      <title>GCC</title>
       <link>https://longrichli.github.io/tags/gcc/</link>
       <pubDate>Sat, 30 Aug 2025 22:41:00 +0800</pubDate>
       <guid>https://longrichli.github.io/tags/gcc/</guid>

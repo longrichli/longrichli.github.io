@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GDB on Longrichli&#39;s blog</title>
+    <link>https://longrichli.github.io/tags/gdb/</link>
+    <description>Recent content in GDB on Longrichli&#39;s blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 13 Apr 2026 22:53:49 +0800</lastBuildDate>
+    <atom:link href="https://longrichli.github.io/tags/gdb/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VS Code 配置 LinuxC/C&#43;&#43; GDB调试环境</title>
+      <link>https://longrichli.github.io/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</link>
+      <pubDate>Mon, 13 Apr 2026 22:53:49 +0800</pubDate>
+      <guid>https://longrichli.github.io/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</guid>
+      <description>本文介绍了VS Code 如何集成GDB，可视化的调试 Linux C/C++ 程序。</description>
+    </item>
+  </channel>
+</rss>
