@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="">
+  <script src="https://longrichli.github.io/js/quotes.js"></script>
+  <link rel="stylesheet" href="https://longrichli.github.io/css/dracula.css" type="text/css">
+  <link rel="alternate" type="application/rss+xml" href="https://longrichli.github.io/index.xml" title="RSS订阅">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet"
+    media="print" type="text/css" onload="this.media='all'">
+  
+
+  <title>
+    
+    
+     core文件调试教程 
+    
+  </title>
+  <link rel="canonical" href="https://longrichli.github.io/posts/core%E6%96%87%E4%BB%B6%E8%B0%83%E8%AF%95%E6%95%99%E7%A8%8B/">
+
+  <style>
+  @font-face {
+    font-family: "JetBrainsMono";
+    src: url("https://lcf-resources.oss-cn-beijing.aliyuncs.com/resources/longrichli-blog/2026/04/JetBrainsMono-Regular.woff2");
+  }
+   
+
+  @font-face {
+    font-family: "myfont-unknown";
+    src: url("https://lcf-resources.oss-cn-beijing.aliyuncs.com/resources/longrichli-blog/2026/04/13.woff2");
+  }
+  * {
+    border: 0;
+    font: "myfont-unknown";
+    font-size: 100%;
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+    font-family: 'myfont-unknown';
+    font-size: 17px;
+    line-height: 160%;
+    color: #1d1313;
+    max-width: 750px;
+    margin: auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border: none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify {
+    float: left;
+  }
+
+  .right-justify {
+    float: right;
+  }
+
+  pre,
+  code {
+    font: 12px "JetBrainsMono", "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,
+  q,
+  em,
+  dfn {
+    font-style: italic;
+  }
+
+  .sans,
+  html .gist .gist-file .gist-meta {
+    font-family: "myfont-unknown", "Open Sans", "Myriad Pro", Myriad, sans-serif;
+  }
+
+  .mono,
+  pre,
+  code,
+  tt,
+  p code,
+  li code {
+    font-family: "JetBrainsMono", "Liberation Mono", Menlo, Courier, monospace;
+  }
+
+  .heading,
+  .serif,
+  h1,
+  h2,
+  h3 {
+    font-family: "myfont-unknown", serif;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  q:before {
+    content: "\201C";
+  }
+
+  q:after {
+    content: "\201D";
+  }
+
+  del,
+  s {
+    text-decoration: line-through;
+  }
+
+  blockquote {
+    font-family: "myfont-unknown", serif;
+    text-align: center;
+    padding: 50px;
+  }
+
+  blockquote p {
+    display: inline-block;
+    font-style: italic;
+  }
+
+  blockquote:before,
+  blockquote:after {
+    font-family: "myfont-unknown", serif;
+    content: '\201C';
+    font-size: 35px;
+    color: #403c3b;
+  }
+
+  blockquote:after {
+    content: '\201D';
+  }
+
+  hr {
+    width: 100%;
+    height: 1px;
+    background: #403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size: 35px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 22px;
+    margin-top: 18px;
+  }
+
+  h1 a,
+  h2 a,
+  h3 a {
+    text-decoration: none;
+  }
+
+  h1,
+  h2 {
+    margin-top: 28px;
+  }
+
+  #sub-header,
+  .date {
+    color: #403c3b;
+    font-size: 13px;
+  }
+
+  #sub-header a {
+    color: #403c3b;
+    text-decoration: none;
+  }
+
+  #sub-header a:hover {
+    text-decoration: underline;
+    color: #1e90ff;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+    text-align: center;
+  }
+
+  #nav h1 a {
+    font-size: 35px;
+    color: #1d1313;
+    line-height: 120%;
+  }
+
+  .posts_listing a,
+  #nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+
+  ul li:before {
+    content: "• ";
+  }
+
+  #nav ul li:before,
+  .posts_listing li:before {
+    content: '';
+    margin-right: 0;
+  }
+
+  #content {
+    text-align: left;
+    width: 100%;
+    font-size: 17px;
+    padding: 1px 0 80px;
+  }
+
+  #content h1,
+  #content h2 {
+    margin-bottom: 5px;
+  }
+
+  #content h2 {
+    font-size: 25px;
+  }
+
+  #content .entry-content {
+    margin-top: 15px;
+  }
+
+  #content .date {
+    margin-left: 3px;
+  }
+
+  #content h1 {
+    text-align: center;
+    font-size: 30px;
+  }
+
+  .highlight {
+    background-color: #6d6d6d;
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin: 0 0 50px;
+  }
+
+  .posts_listing li {
+    margin: 0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,
+  #nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align: center;
+    position: static;
+    margin-top: 60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type: none;
+    display: table-cell;
+    font-size: 15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right: 0.5em;
+    ;
+  }
+
+  #links :nth-child(2) {
+    margin-left: 0.5em;
+    ;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family: "myfont-unknown", serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  .tags {
+    list-style: none;
+     
+    padding: 0;
+    margin: 0;
+    display: flex;
+     
+    flex-wrap: wrap;
+     
+    gap: 8px;
+     
+  }
+
+  .tags li {
+    background-color: #f0f0f0;
+     
+    padding: 4px 10px;
+    border-radius: 12px;
+     
+    font-size: 0.9rem;
+  }
+
+  .tags li a {
+    color: #555;
+    text-decoration: none;
+  }
+
+  .tags li a:hover {
+    color: #1e90ff;
+     
+    text-decoration: underline;
+  }
+
+  table {
+    margin-top: 2em;
+    border-collapse: collapse;
+     
+    width: 100%;
+     
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid #ddd;
+     
+  }
+
+  th,
+  td {
+    padding: 8px;
+     
+    text-align: left;
+     
+  }
+
+  th {
+    background-color: #f2f2f2;
+     
+  }
+
+
+  .dark-mode *,
+  .dark-mode #nav h1 a {
+    color: #bbb;
+  }
+
+  .dark-mode body {
+    background: #212121;
+  }
+
+  .dark-mode pre,
+  .dark-mode code {
+    background-color: #262626;
+  }
+
+  .dark-mode #sub-header,
+  .dark-mode .date,
+  .dark-mode #sub-header a {
+    color: #8a8a8a;
+  }
+
+  .dark-mode hr {
+    background: #858585;
+  }
+
+  .dark-mode .article-entry {
+    line-height: 1.5;
+    margin-bottom: 1em;
+    overflow: visible;
+  }
+
+  .dark-mode .tags {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dark-mode .tags li {
+    background-color: #444;
+     
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  .dark-mode .tags li a {
+    color: #ddd;
+    text-decoration: none;
+  }
+
+  .dark-mode .tags li a:hover {
+    color: #66b3ff;
+    text-decoration: underline;
+  }
+
+  .dark-mode table {
+    margin-top: 2em;
+    border-collapse: collapse;
+    width: 100%;
+    color: #ddd;
+     
+  }
+
+  .dark-mode table,
+  th,
+  td {
+    border: 1px solid #555;
+     
+  }
+
+  .dark-mode th,
+  td {
+    padding: 8px;
+    text-align: left;
+  }
+
+  .dark-mode th {
+    background-color: #333;
+     
+    color: #eee;
+     
+  }
+
+  .dark-mode tr:nth-child(even) {
+    background-color: #2a2a2a;
+     
+  }
+
+  .dark-mode tr:nth-child(odd) {
+    background-color: #222;
+     
+  }
+
+  .tags li:before {
+    content: none !important;
+  }
+
+  #toggle-theme {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 14px;
+    z-index: 999;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #nav h1 a {
+      font-size: 28px;
+    }
+
+    #nav li {
+      font-size: 13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top: 0;
+      padding-top: 50px;
+      font-size: 15px;
+    }
+
+    .article-entry {
+      font-size: 15px;
+    }
+
+    #content h1 {
+      font-size: 25px;
+    }
+
+    #content h2 {
+      font-size: 22px;
+    }
+
+    .posts_listing li div {
+      font-size: 12px;
+    }
+
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    #nav h1 a {
+      font-size: 22px;
+    }
+
+    #nav li {
+      font-size: 12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top: 0;
+      padding-top: 20px;
+      font-size: 15px;
+    }
+
+    .article-entry {
+      font-size: 15px;
+    }
+
+    #content h1 {
+      font-size: 20px;
+    }
+
+    #content h2 {
+      font-size: 18px;
+    }
+
+    .posts_listing li div {
+      font-size: 15px;
+    }
+  }
+
+</style>
+
+  </head>
+
+<body>
+  <section id="nav">
+    <h1><a class="h-card" href="https://longrichli.github.io/">Longrichli&#39;s blog</a></h1>
+    <ul>
+      
+      <li><a href="https://longrichli.github.io/">首页</a></li>
+      
+      <li><a href="https://longrichli.github.io/categories/">分类</a></li>
+      
+      <li><a href="https://longrichli.github.io/tags/">标签</a></li>
+      
+      <li><a href="https://longrichli.github.io/archives/">归档</a></li>
+      
+      <li><a href="https://longrichli.github.io/index.xml">RSS</a></li>
+      
+    </ul>
+  </section>
+  <div>
+    <div style="margin-top: 2ex;">
+      
+      <div id="quote" class="article-entry">纸上得来终觉浅，绝知此事要躬行。</div>
+      <div id="author" class="article-entry">- 陆游 《冬夜读书示子聿》</div>
+    </div>
+    <hr style="width: 100%;">
+  </div>
+
+<section id="content">
+  <h1> core文件调试教程 </h1>
+
+
+  <div id="sub-header">
+    2026-04-18 18:44 · 
+    
+      
+        
+        <a href="https://longrichli.github.io/categories/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">使用教程</a>
+       ·
+    
+    
+    
+    
+    6 minutes read
+  </div>
+
+
+
+
+  <div class="entry-content">
+    <h2 id="什么是-core-文件">什么是 core 文件</h2>
+<p>当进程被某些信号终止后，会产生一个包含进程终止时的内存映像的文件，这个文件叫做 core 文件，中文名叫核心转储文件。这个文件可以被调试器（如GDB）使用，用来查看进程终止时的状态。</p>
+<p>以下是常见的会产生 core 文件的信号</p>
+<table>
+  <thead>
+      <tr>
+          <th>信号名</th>
+          <th>编号</th>
+          <th>含义</th>
+          <th>是否常见</th>
+          <th>典型触发场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>SIGSEGV</code></td>
+          <td>11</td>
+          <td>段错误</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>空指针、野指针、越界访问、use-after-free</td>
+      </tr>
+      <tr>
+          <td><code>SIGABRT</code></td>
+          <td>6</td>
+          <td>程序主动中止</td>
+          <td>⭐⭐⭐⭐</td>
+          <td><code>assert</code> 失败、<code>abort()</code>、double free</td>
+      </tr>
+      <tr>
+          <td><code>SIGFPE</code></td>
+          <td>8</td>
+          <td>算术异常</td>
+          <td>⭐⭐⭐</td>
+          <td>除 0、浮点异常</td>
+      </tr>
+      <tr>
+          <td><code>SIGILL</code></td>
+          <td>4</td>
+          <td>非法指令</td>
+          <td>⭐⭐⭐</td>
+          <td>函数指针错误、执行非法内存</td>
+      </tr>
+      <tr>
+          <td><code>SIGBUS</code></td>
+          <td>7</td>
+          <td>总线错误</td>
+          <td>⭐⭐⭐</td>
+          <td>mmap 越界、未对齐访问</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="ulimit-设置">ulimit 设置</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln">1</span><span class="cl"><span class="nx">ulimit</span> <span class="o">-</span><span class="nx">a</span> <span class="c1">// 查看是否限制core文件生成
+</span></span></span></code></pre></div><p>执行结果如下</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nx">real</span><span class="o">-</span><span class="nx">time</span> <span class="nx">non</span><span class="o">-</span><span class="nx">blocking</span> <span class="nx">time</span>  <span class="p">(</span><span class="nx">microseconds</span><span class="p">,</span> <span class="o">-</span><span class="nx">R</span><span class="p">)</span> <span class="nx">unlimited</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="nx">core</span> <span class="nx">file</span> <span class="nx">size</span>              <span class="p">(</span><span class="nx">blocks</span><span class="p">,</span> <span class="o">-</span><span class="nx">c</span><span class="p">)</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="nx">data</span> <span class="nx">seg</span> <span class="nx">size</span>               <span class="p">(</span><span class="nx">kbytes</span><span class="p">,</span> <span class="o">-</span><span class="nx">d</span><span class="p">)</span> <span class="nx">unlimited</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="nx">scheduling</span> <span class="nx">priority</span>                 <span class="p">(</span><span class="o">-</span><span class="nx">e</span><span class="p">)</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="nx">file</span> <span class="nx">size</span>                   <span class="p">(</span><span class="nx">blocks</span><span class="p">,</span> <span class="o">-</span><span class="nx">f</span><span class="p">)</span> <span class="nx">unlimited</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="nx">pending</span> <span class="nx">signals</span>                     <span class="p">(</span><span class="o">-</span><span class="nx">i</span><span class="p">)</span> <span class="mi">14341</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="nx">max</span> <span class="nx">locked</span> <span class="nx">memory</span>           <span class="p">(</span><span class="nx">kbytes</span><span class="p">,</span> <span class="o">-</span><span class="nx">l</span><span class="p">)</span> <span class="mi">64</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="nx">max</span> <span class="nx">memory</span> <span class="nx">size</span>             <span class="p">(</span><span class="nx">kbytes</span><span class="p">,</span> <span class="o">-</span><span class="nx">m</span><span class="p">)</span> <span class="nx">unlimited</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="nx">open</span> <span class="nx">files</span>                          <span class="p">(</span><span class="o">-</span><span class="nx">n</span><span class="p">)</span> <span class="mi">1024</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="nx">pipe</span> <span class="nx">size</span>                <span class="p">(</span><span class="mi">512</span> <span class="nx">bytes</span><span class="p">,</span> <span class="o">-</span><span class="nx">p</span><span class="p">)</span> <span class="mi">8</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="nx">POSIX</span> <span class="nx">message</span> <span class="nx">queues</span>         <span class="p">(</span><span class="nx">bytes</span><span class="p">,</span> <span class="o">-</span><span class="nx">q</span><span class="p">)</span> <span class="mi">819200</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="nx">real</span><span class="o">-</span><span class="nx">time</span> <span class="nx">priority</span>                  <span class="p">(</span><span class="o">-</span><span class="nx">r</span><span class="p">)</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl"><span class="nx">stack</span> <span class="nx">size</span>                  <span class="p">(</span><span class="nx">kbytes</span><span class="p">,</span> <span class="o">-</span><span class="nx">s</span><span class="p">)</span> <span class="mi">8192</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="nx">cpu</span> <span class="nx">time</span>                   <span class="p">(</span><span class="nx">seconds</span><span class="p">,</span> <span class="o">-</span><span class="nx">t</span><span class="p">)</span> <span class="nx">unlimited</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl"><span class="nx">max</span> <span class="nx">user</span> <span class="nx">processes</span>                  <span class="p">(</span><span class="o">-</span><span class="nx">u</span><span class="p">)</span> <span class="mi">14341</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="nx">virtual</span> <span class="nx">memory</span>              <span class="p">(</span><span class="nx">kbytes</span><span class="p">,</span> <span class="o">-</span><span class="nx">v</span><span class="p">)</span> <span class="nx">unlimited</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="nx">file</span> <span class="nx">locks</span>                          <span class="p">(</span><span class="o">-</span><span class="nx">x</span><span class="p">)</span> <span class="nx">unlimited</span>
+</span></span></code></pre></div><p>当 core file size  为0 时， 不会生成 core 文件，使用如下命令改变 core file size。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln">1</span><span class="cl"><span class="nx">ulimit</span> <span class="o">-</span><span class="nx">c</span> <span class="nx">unlimited</span> <span class="c1">// unlimited 意思为不限制，也可以用数字指定大小，单位是 block （512字节）
+</span></span></span></code></pre></div><h2 id="kernelcore_pattern--设置">kernel.core_pattern  设置</h2>
+<p>当进程因为 <strong>致命信号</strong>（如 <code>SIGSEGV</code>、<code>SIGABRT</code>）崩溃时，内核会：</p>
+<ol>
+<li>
+<p>检查 <code>RLIMIT_CORE</code>（即 <code>ulimit -c</code>）</p>
+</li>
+<li>
+<p>若允许生成 core</p>
+</li>
+<li>
+<p>按 <code>kernel.core_pattern</code> 指定的规则</p>
+<p>→ <strong>生成 core 文件</strong> 或 <strong>将 core 通过管道交给用户态程序处理</strong></p>
+</li>
+</ol>
+<p>因此它决定了两件事：</p>
+<ul>
+<li>core 文件<strong>叫什么名字 / 放在哪里</strong></li>
+<li>core 是<strong>直接写文件</strong>，还是<strong>交给处理器（如 systemd-coredump）</strong></li>
+</ul>
+<h3 id="查看当前设置">查看当前设置</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln">1</span><span class="cl"><span class="nx">cat</span> <span class="o">/</span><span class="nx">proc</span><span class="o">/</span><span class="nx">sys</span><span class="o">/</span><span class="nx">kernel</span><span class="o">/</span><span class="nx">core_pattern</span> 
+</span></span></code></pre></div><p>或者</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln">1</span><span class="cl"><span class="nx">sysctl</span> <span class="nx">kernel</span><span class="p">.</span><span class="nx">core_pattern</span>
+</span></span></code></pre></div><h3 id="常见输出示例">常见输出示例：</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">core
+</span></span></code></pre></div><p>或：(后面说明这种方式，这种方式是交由了systemd-coredump 进程处理)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">|/usr/lib/systemd/systemd-coredump%P%u%g%s%t%c%h%e
+</span></span></code></pre></div><h3 id="临时更改设置">临时更改设置</h3>
+<ol>
+<li>使用 <code>sysctl</code></li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">sudo sysctl -w kernel.core_pattern<span class="o">=</span>core
+</span></span></code></pre></div><p>或：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">sudo sysctl -w kernel.core_pattern<span class="o">=</span>/tmp/core.%e.%p
+</span></span></code></pre></div><ol start="2">
+<li>直接写 <code>/proc</code></li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">echo<span class="s2">&#34;/tmp/core.%e.%p&#34;</span> &gt;&gt; /proc/sys/kernel/core_pattern
+</span></span></code></pre></div><h3 id="永久更改设置">永久更改设置</h3>
+<p>编辑：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">sudo vim /etc/sysctl.conf
+</span></span></code></pre></div><p>或创建单独配置文件（更规范）：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">sudo vim /etc/sysctl.d/99-core.conf
+</span></span></code></pre></div><p>写入：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">kernel.core_pattern=/tmp/core.%e.%p
+</span></span></code></pre></div><p>使其生效：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">sudo sysctl -p <span class="c1"># 或</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">sudo sysctl --system
+</span></span></code></pre></div><h3 id="core_pattern-占位符语义化命名">core_pattern 占位符（语义化命名）</h3>
+<table>
+  <thead>
+      <tr>
+          <th>占位符</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>%e</code></td>
+          <td>可执行文件名</td>
+      </tr>
+      <tr>
+          <td><code>%p</code></td>
+          <td>进程 PID</td>
+      </tr>
+      <tr>
+          <td><code>%u</code></td>
+          <td>用户 UID</td>
+      </tr>
+      <tr>
+          <td><code>%g</code></td>
+          <td>用户 GID</td>
+      </tr>
+      <tr>
+          <td><code>%s</code></td>
+          <td>导致 core 的信号编号</td>
+      </tr>
+      <tr>
+          <td><code>%t</code></td>
+          <td>崩溃时间（epoch 秒）</td>
+      </tr>
+      <tr>
+          <td><code>%h</code></td>
+          <td>主机名</td>
+      </tr>
+      <tr>
+          <td><code>%c</code></td>
+          <td>core 文件大小限制</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="管道模式">“管道模式”</h3>
+<p>如果 <code>core_pattern</code> <strong>以 <code>|</code> 开头</strong>，表示：</p>
+<blockquote>
+<p><strong>不生成 core 文件，而是把 core dump 通过管道传给一个用户态程序</strong></p></blockquote>
+<p>典型例子（现代发行版默认）：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">|/usr/lib/systemd/systemd-coredump%P%u%g%s%t%c%h%e
+</span></span></code></pre></div><p>这意味着：</p>
+<ul>
+<li>core <strong>不在当前目录</strong></li>
+<li>被 systemd 收集、压缩、存储</li>
+<li>需要用专门工具查看</li>
+</ul>
+<h3 id="systemd-coredump-相关操作">systemd-coredump 相关操作</h3>
+<p>查看 core 列表</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">coredumpctl list
+</span></span></code></pre></div><p>调试某个 core</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">coredumpctl gdb &lt;PID&gt;
+</span></span></code></pre></div><p>导出 core 文件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln">1</span><span class="cl">coredumpctl dump &lt;PID&gt; &gt; core.dump
+</span></span></code></pre></div><h2 id="调试-core-文件">调试 core 文件</h2>
+<h3 id="systemd-coredump-管理的-core-文件">systemd-coredump 管理的 core 文件</h3>
+<p>见上述systemd-coredump 相关操作</p>
+<h3 id="普通-core-文件">普通 core 文件</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="line"><span class="ln">1</span><span class="cl"><span class="nx">gdb</span> <span class="p">&lt;</span><span class="nt">可执行文件</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nt">core文件</span><span class="p">&gt;</span>
+</span></span></code></pre></div><p>运行后到达崩溃处，然后bt，frame调试即可。</p>
+
+  </div>
+  <div>
+    
+    <ul class="tags">
+      
+      <li><a href="https://longrichli.github.io/tags/core">core</a></li>
+      
+      <li><a href="https://longrichli.github.io/tags/gdb">GDB</a></li>
+      
+      <li><a href="https://longrichli.github.io/tags/linux-c">Linux C</a></li>
+      
+      <li><a href="https://longrichli.github.io/tags/debug">Debug</a></li>
+      
+    </ul>
+    
+  </div>
+  <hr>
+  <div id=links>
+    
+    <a href="#"></a>
+    
+    
+    <a href="https://longrichli.github.io/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/">&nbsp;&raquo;VS Code 配置 LinuxC/C&#43;&#43; GDB调试环境</a>
+    
+  </div>
+</section>
+<script src="https://utteranc.es/client.js"
+        repo="longrichli/blog-comments"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-JHKFGEGXJ0"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-JHKFGEGXJ0');
+        }
+      </script>
+
+<dev id="toggle-theme">🌙</dev>
+<script src="https://longrichli.github.io/js/theme.js"></script>
+<script src="https://longrichli.github.io/js/clip.js"></script>
+</body>
+
+</html>

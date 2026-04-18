@@ -30,9 +30,15 @@
     font-family: "JetBrainsMono";
     src: url("https://lcf-resources.oss-cn-beijing.aliyuncs.com/resources/longrichli-blog/2026/04/JetBrainsMono-Regular.woff2");
   }
+   
+
+  @font-face {
+    font-family: "myfont-unknown";
+    src: url("https://lcf-resources.oss-cn-beijing.aliyuncs.com/resources/longrichli-blog/2026/04/13.woff2");
+  }
   * {
     border: 0;
-    font: "JetBrainsMono";
+    font: "myfont-unknown";
     font-size: 100%;
     vertical-align: baseline;
     margin: 0;
@@ -43,7 +49,7 @@
 
   body {
      
-    font-family: 'JetBrainsMono';
+    font-family: 'myfont-unknown';
     font-size: 17px;
     line-height: 160%;
     color: #1d1313;
@@ -129,7 +135,7 @@
 
   .sans,
   html .gist .gist-file .gist-meta {
-    font-family: "JetBrainsMono", "Open Sans", "Myriad Pro", Myriad, sans-serif;
+    font-family: "myfont-unknown", "Open Sans", "Myriad Pro", Myriad, sans-serif;
   }
 
   .mono,
@@ -146,7 +152,7 @@
   h1,
   h2,
   h3 {
-    font-family: "JetBrainsMono", serif;
+    font-family: "myfont-unknown", serif;
   }
 
   strong {
@@ -167,7 +173,7 @@
   }
 
   blockquote {
-    font-family: "JetBrainsMono", serif;
+    font-family: "myfont-unknown", serif;
     text-align: center;
     padding: 50px;
   }
@@ -179,7 +185,7 @@
 
   blockquote:before,
   blockquote:after {
-    font-family: "JetBrainsMono", serif;
+    font-family: "myfont-unknown", serif;
     content: '\201C';
     font-size: 35px;
     color: #403c3b;
@@ -360,7 +366,7 @@
   }
 
   #not-found a {
-    font-family: "JetBrainsMono", serif;
+    font-family: "myfont-unknown", serif;
     font-size: 200px;
     text-decoration: none;
     display: inline-block;
@@ -656,6 +662,20 @@
     
     
     <li>
+      <h2 style="text-align: center;"><a href="https://longrichli.github.io/posts/core%E6%96%87%E4%BB%B6%E8%B0%83%E8%AF%95%E6%95%99%E7%A8%8B/">core文件调试教程</a></h2>
+      <div style="text-align: center;" class=date>
+        
+        2026-04-18 18:44
+        
+      </div>
+      <div class="summary">
+        <p>当进程被某些信号终止后，会产生一个包含进程终止时的内存映像的文件，这个文件叫做 core 文件，中文名叫核心转储文件。这个文件可以被调试器（如GDB）使用，用来查看进程终止时的状态。本文介绍了如何用 GDB 来调试 core 文件。</p>
+        <p style="text-align: center;"><a style="color: #767676;" href="https://longrichli.github.io/posts/core%E6%96%87%E4%BB%B6%E8%B0%83%E8%AF%95%E6%95%99%E7%A8%8B/">阅读全文</a></p>
+      </div>
+
+    </li>
+    
+    <li>
       <h2 style="text-align: center;"><a href="https://longrichli.github.io/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/">VS Code 配置 LinuxC/C&#43;&#43; GDB调试环境</a></h2>
       <div style="text-align: center;" class=date>
         
@@ -749,20 +769,6 @@
       <div class="summary">
         <p>昨天晚上无聊，在浏览器上搜小黄油，结果找到了一篇mac电脑游戏推荐的博客，选了2个加了Steam的愿望单，一个是《异星工厂》，一个是 《Gorogoa》，这两个都觉得挺有意思。</p>
         <p style="text-align: center;"><a style="color: #767676;" href="https://longrichli.github.io/posts/%E9%87%8D%E6%8B%BE%E5%8D%9A%E5%AE%A2/">阅读全文</a></p>
-      </div>
-
-    </li>
-    
-    <li>
-      <h2 style="text-align: center;"><a href="https://longrichli.github.io/posts/%E6%BB%8B%E5%91%B3/">滋味</a></h2>
-      <div style="text-align: center;" class=date>
-        
-        2025-09-04 01:25
-        
-      </div>
-      <div class="summary">
-        <p>要说天底下难办的事，每天到了饭点吃什么得算一样，对于我这种没见过大世面，吃不起山珍海味的普通人来说尤为如此。每到了要吃饭的时候，就抿抿嘴，寻思吃什么好，思来想去，只好在米面之中选一样凑合了事。</p>
-        <p style="text-align: center;"><a style="color: #767676;" href="https://longrichli.github.io/posts/%E6%BB%8B%E5%91%B3/">阅读全文</a></p>
       </div>
 
     </li>
