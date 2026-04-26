@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>VS Code on Longrichli&#39;s blog</title>
-    <link>http://192.168.1.52:1313/tags/vs-code/</link>
+    <link>https://longrichli.github.io/tags/vs-code/</link>
     <description>Recent content in VS Code on Longrichli&#39;s blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 13 Apr 2026 22:53:49 +0800</lastBuildDate>
-    <atom:link href="http://192.168.1.52:1313/tags/vs-code/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://longrichli.github.io/tags/vs-code/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VS Code 配置 LinuxC/C&#43;&#43; GDB调试环境</title>
-      <link>http://192.168.1.52:1313/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</link>
+      <link>https://longrichli.github.io/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</link>
       <pubDate>Mon, 13 Apr 2026 22:53:49 +0800</pubDate>
-      <guid>http://192.168.1.52:1313/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</guid>
+      <guid>https://longrichli.github.io/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</guid>
       <description>本文介绍了VS Code 如何集成GDB，可视化的调试 Linux C/C++ 程序。</description>
     </item>
   </channel>
