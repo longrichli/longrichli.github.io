@@ -29,15 +29,17 @@
     font-family: "JetBrainsMono";
     src: url("https://lcf-resources.oss-cn-beijing.aliyuncs.com/resources/longrichli-blog/2026/04/JetBrainsMono-Regular.woff2");
   }
+
    
    
 
   @font-face {
     font-family: "myfont-unknown";
-   src: url("https://lcf-resources.oss-cn-beijing.aliyuncs.com/resources/longrichli-blog/2026/04/13.woff2");
-    
+    src: url("https://lcf-resources.oss-cn-beijing.aliyuncs.com/resources/longrichli-blog/2026/04/13.woff2");
+     
 
   }
+
   * {
     border: 0;
     font: "myfont-unknown";
@@ -386,6 +388,7 @@
   .article-entry {
     font-size: 22px;
   }
+
   .tags {
     list-style: none;
      
@@ -459,13 +462,13 @@
 
   .terms_listing,
   .archives_listing {
-    list-style:none; 
-    padding-left:0; 
+    list-style: none;
+    padding-left: 0;
   }
 
   .terms_listing li,
   .archives_listing li {
-    margin-bottom: 8px; 
+    margin-bottom: 8px;
     font-size: 22px;
   }
 
@@ -496,7 +499,7 @@
 
   .terms li {
     list-style: none;
-    margin-bottom: 8px; 
+    margin-bottom: 8px;
     background-color: #f0f0f0;
      
     padding: 4px 10px;
@@ -517,13 +520,265 @@
   }
 
   .terms li span {
-    color:#888; 
+    color: #888;
     margin-left: 5px;
   }
 
   .pagination {
-    text-align:center;
+    text-align: center;
   }
+
+   
+  .comments-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .comments-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+   
+   
+
+  .btn-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+   
+.comment-form {
+    margin-bottom: 32px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+}
+
+ 
+.comment-form * {
+    box-sizing: border-box;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 18px;
+    transition: border-color 0.2s;
+     
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: orange;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background: #1ca83c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background: #00890e
+}
+
+   
+  .comment-list {
+    list-style: none;
+  }
+
+  .comment-item {
+    padding: 16px 0;
+     
+  }
+
+  .comment-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .comment-author {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .comment-badge {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #ffc107;
+    color: #333;
+  }
+
+  .comment-badge.author {
+    background: #28a745;
+    color: white;
+  }
+
+  .comment-time {
+    font-size: 12px;
+    color: #999;
+  }
+
+  .comment-content {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: #555;
+  }
+
+  .comment-actions {
+    display: flex;
+    gap: 16px;
+  }
+
+  .comment-actions button {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .comment-actions button:hover {
+    color: #007bff;
+  }
+
+   
+  .reply-form {
+    margin-top: 12px;
+    margin-left: 52px;
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    display: none;
+  }
+
+  .reply-form.show {
+    display: block;
+  }
+
+  .reply-input {
+    width: 95%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+
+  .reply-submit {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+   
+  .replies-0 {
+    margin-left: 52px;
+    margin-top: 12px;
+  }
+
+  .reply-item {
+    padding: 12px 0;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .reply-item:last-child {
+    border-bottom: none;
+  }
+
+   
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+  }
+
+   
+  .author-tag {
+    background: #28a745;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+  }
+
+   
+  .reply-to {
+    font-size: 16px;
+    color: #176eab;
+    margin-right: 4px;
+  }
+
 
   .dark-mode *,
   .dark-mode #nav h1 a {
@@ -625,6 +880,48 @@
     background-color: #222;
      
   }
+
+  .dark-mode .comments-section {
+    background-color: #2c2c2c;
+    color: #bbb;
+  }
+  .dark-mode .comment-form {
+    background-color: #373737;
+    color: #bbb;
+  }
+  .dark-mode .form-group label {
+    color: #bbb;
+  }
+
+  .dark-mode .btn-submit {
+    color: white;
+  }
+
+  .dark-mode .reply-form {
+    background: #333;
+  }
+  .dark-mode .reply-to {
+    color: #0056b3;
+  }
+
+  .dark-mode .form-group input,
+  .dark-mode .form-group textarea,
+  .dark-mode .reply-input{
+     
+    background: #333;
+    border:  1px solid #626262;
+  }
+
+  .dark-mode .form-group input:focus,
+  .dark-mode .form-group textarea:focus {
+    outline: none;
+    border-color: orange;
+  }
+  .dark-mode .author-tag {
+    color: white;
+  }
+
+  
 
   .tags li:before,
   .terms li:before,
@@ -754,7 +1051,6 @@
       font-size: 22px;
     }
   }
-
 </style>
 
   </head>
@@ -789,23 +1085,26 @@
 <section id="content">
   <h1> gcc使用教程 </h1>
 
-
+  
   <div id="sub-header">
-    2025-08-30 22:41 · 
-    
-      
-        
-        <a href="/categories/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">使用教程</a>
-       ·
+    2025-08-30 22:41 ·
     
     
     
+    <a href="/%20categories/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">使用教程</a>
+     ·
     
-    31 minutes read
+    
+    
+    
+    31 minutes read ·
+    
+    
+    <span id="view-count" data-article-title="gcc使用教程">loading...</span> views
   </div>
+  
 
-
-
+  
 
   <div class="entry-content">
     <h2 id="1-常用编译选项">1. 常用编译选项</h2>
@@ -1119,11 +1418,11 @@
     
     <ul class="tags">
       
-      <li><a href="/tags/gcc">GCC</a></li>
+      <li><a href="/%20/tags/gcc">GCC</a></li>
       
-      <li><a href="/tags/%E5%8A%A8%E6%80%81%E5%BA%93">动态库</a></li>
+      <li><a href="/%20/tags/%E5%8A%A8%E6%80%81%E5%BA%93">动态库</a></li>
       
-      <li><a href="/tags/%E5%85%B1%E4%BA%AB%E5%BA%93">共享库</a></li>
+      <li><a href="/%20/tags/%E5%85%B1%E4%BA%AB%E5%BA%93">共享库</a></li>
       
     </ul>
     
@@ -1138,13 +1437,42 @@
     
   </div>
 </section>
-<script src="https://utteranc.es/client.js"
-        repo="longrichli/blog-comments"
-        issue-term="pathname"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
-</script>
+<div class="comments-section">
+  <div class="comments-title">
+    💬 评论
+    <span id="comment-count" style="font-size: 14px; color: #999; margin-left: 8px;"></span>
+    
+  </div>
+  
+  <div class="comment-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>昵称 <span style="color: red;">*</span></label>
+        <input type="text" id="user-name" placeholder="请输入昵称" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label>邮箱 <span style="color: red;">*</span></label>
+        <input type="email" id="user-email" placeholder="请输入邮箱">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>网站（可选）</label>
+      <input type="url" id="user-website" placeholder="https://">
+    </div>
+    <div class="form-group">
+      <label>评论内容 <span style="color: red;">*</span></label>
+      <textarea id="comment-content" placeholder="写下你的评论..."></textarea>
+    </div>
+    <button class="btn-submit" onclick="submitComment()">发表评论</button>
+  </div>
+
+
+  
+  <div id="comments-container">
+    <div class="loading">加载评论中...</div>
+  </div>
+
+</div>
 
 
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-JHKFGEGXJ0"></script>
@@ -1166,6 +1494,8 @@
 </div>
 <script src="/js/theme.js"></script>
 <script src="/js/clip.js"></script>
+<script src="https://lcf-resources.oss-cn-beijing.aliyuncs.com/resources/longrichli-blog/2026/05/multiavatar.min.js"></script>
+<script src="/js/blog-core.js"></script>
 </body>
 
 </html>
