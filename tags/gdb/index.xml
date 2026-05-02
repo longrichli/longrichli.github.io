@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>GDB on Longrichli&#39;s blog</title>
-    <link>/tags/gdb/</link>
+    <link>//localhost:1313/tags/gdb/</link>
     <description>Recent content in GDB on Longrichli&#39;s blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 18 Apr 2026 18:44:23 +0800</lastBuildDate>
-    <atom:link href="/tags/gdb/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="//localhost:1313/tags/gdb/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>core文件调试教程</title>
-      <link>/posts/core%E6%96%87%E4%BB%B6%E8%B0%83%E8%AF%95%E6%95%99%E7%A8%8B/</link>
+      <link>//localhost:1313/posts/core%E6%96%87%E4%BB%B6%E8%B0%83%E8%AF%95%E6%95%99%E7%A8%8B/</link>
       <pubDate>Sat, 18 Apr 2026 18:44:23 +0800</pubDate>
-      <guid>/posts/core%E6%96%87%E4%BB%B6%E8%B0%83%E8%AF%95%E6%95%99%E7%A8%8B/</guid>
+      <guid>//localhost:1313/posts/core%E6%96%87%E4%BB%B6%E8%B0%83%E8%AF%95%E6%95%99%E7%A8%8B/</guid>
       <description>当进程被某些信号终止后，会产生一个包含进程终止时的内存映像的文件，这个文件叫做 core 文件，中文名叫核心转储文件。这个文件可以被调试器（如GDB）使用，用来查看进程终止时的状态。本文介绍了如何用 GDB 来调试 core 文件。</description>
     </item>
     <item>
       <title>VS Code 配置 LinuxC/C&#43;&#43; GDB调试环境</title>
-      <link>/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</link>
+      <link>//localhost:1313/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</link>
       <pubDate>Mon, 13 Apr 2026 22:53:49 +0800</pubDate>
-      <guid>/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</guid>
+      <guid>//localhost:1313/posts/vscode%E9%85%8D%E7%BD%AElinuxc_gdb%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</guid>
       <description>本文介绍了VS Code 如何集成GDB，可视化的调试 Linux C/C++ 程序。</description>
     </item>
   </channel>
