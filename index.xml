@@ -6,8 +6,15 @@
     <description>Recent content on Longrichli&#39;s blog</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 09 May 2026 22:36:19 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 16 May 2026 23:00:06 +0800</lastBuildDate>
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Base64编解码器</title>
+      <link>/tools/base64%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/</link>
+      <pubDate>Sat, 16 May 2026 23:00:06 +0800</pubDate>
+      <guid>/tools/base64%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/</guid>
+      <description>Base64编解码工具。编码支持输入文本，上传文件；解码支持查看解码文本，查看解码二进制，预览解码图片</description>
+    </item>
     <item>
       <title>时间毫不留情地驱赶着每一个人</title>
       <link>/posts/%E6%97%B6%E9%97%B4%E6%AF%AB%E4%B8%8D%E7%95%99%E6%83%85%E5%9C%B0%E9%A9%B1%E8%B5%B6%E7%9D%80%E6%AF%8F%E4%B8%80%E4%B8%AA%E4%BA%BA/</link>
