@@ -52,16 +52,23 @@ const debug = 0;
         // 启动
         initViewCounts();
     else 
-        document.getElementById('view-count').textContent = '0';
+        if (document.getElementById('view-count'))
+            document.getElementById('view-count').textContent = '0';
 })();
 
-const ARTICLE_TITLE = document.getElementById('view-count').dataset.articleTitle;
+var ARTICLE_TITLE = null;
+if(document.getElementById('view-count')) {
+    ARTICLE_TITLE = document.getElementById('view-count').dataset.articleTitle;
+}
 
 // 存储当前回复的评论
 let currentReplyTo = null;
 
 // 获取评论列表
 async function fetchComments() {
+    if (!ARTICLE_TITLE) {
+        return;
+    }
     try {
         const response = await fetch(`${WORKER_URL}/api/comments?article_title=${ARTICLE_TITLE}`);
         const comments = await response.json();
@@ -251,7 +258,10 @@ async function submitComment(parentId = 0, replyToUserName = null) {
         if (data.success) {
             // 清空表单
             if (parentId === 0) {
-                document.getElementById('comment-content').value = '';
+                const commentContent = document.getElementById('comment-content');
+                if (commentContent) {
+                    commentContent.value = '';
+                }
             }
             // 刷新评论列表
             await fetchComments();
@@ -375,9 +385,9 @@ function loadUserInfo() {
     const savedEmail = localStorage.getItem('comment_user_email');
     const savedWebsite = localStorage.getItem('comment_user_website');
 
-    if (savedName) document.getElementById('user-name').value = savedName;
-    if (savedEmail) document.getElementById('user-email').value = savedEmail;
-    if (savedWebsite) document.getElementById('user-website').value = savedWebsite;
+    if (savedName && document.getElementById('user-name')) document.getElementById('user-name').value = savedName;
+    if (savedEmail && document.getElementById('user-email')) document.getElementById('user-email').value = savedEmail;
+    if (savedWebsite && document.getElementById('user-website')) document.getElementById('user-website').value = savedWebsite;
 }
 
 // 提交评论时，保存当前输入到 LocalStorage
@@ -408,3 +418,66 @@ function generateAvatarFromEmail(email, size = 40) {
     const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
     return dataUrl;
 }
+
+
+
+
+// 获取网站列表
+async function getAllWebsites() {
+    if (!ARTICLE_TITLE || ARTICLE_TITLE !== '网站导航') return;
+    try {
+        const response = await fetch(`${WORKER_URL}/api/websites`);
+        const websites = await response.json();
+        if (websites && websites.length > 0) {
+            return websites;
+        } else {
+            showError('暂无网站数据');
+        }
+    } catch (error) {
+        console.error('获取网站数据失败:', error);
+        showError('网络错误，请稍后重试');
+    }
+}
+
+getAllWebsites().then(sites=>{
+    if(!sites) return;
+    render(sites);
+    const search = document.getElementById("search");
+    if (search) {
+        search.addEventListener("input",e=>{
+            render(sites ,e.target.value);
+        });
+    }
+});
+
+function render(sites,keyword=""){
+    const grid = document.getElementById("grid");
+    const search = document.getElementById("search");
+    grid.innerHTML="";
+    sites
+    .filter(site =>
+        site.website_name.toLowerCase().includes(keyword.toLowerCase()) ||
+        site.website_tag.includes(keyword)
+    )
+    .forEach(site => {
+
+        const favicon =
+            new URL(site.website_url).origin + "/favicon.ico";
+
+        grid.innerHTML += `
+        <a class="card" href="${site.website_url}" target="_blank">
+            <div class="top">
+                <img class="icon" src="${favicon}">
+                <div class="name">${site.website_name}</div>
+            </div>
+
+            <div class="desc">
+                ${site.website_desc}
+            </div>
+
+            <span class="tag">${site.website_tag}</span>
+        </a>
+        `;
+    });
+}
+
