@@ -1091,7 +1091,7 @@
     
     
     
-    <a href="/%20categories/%E5%B7%A5%E5%85%B7">工具</a>
+    <a href="/categories/%E5%B7%A5%E5%85%B7">工具</a>
      ·
     
     
@@ -1200,12 +1200,25 @@
 .dark-mode .tag {
     background:#444;
 }
+
+#loading {
+ text-align: center;
+}
+
+#loading span {
+    font-family: "myfont-unknown", serif;
+    font-size: 100px;
+    display: inline-block;
+    padding-top: 50px;
+  }
 </style>
 <div>
     <div class="search-box">
         <input id="search" placeholder="搜索网站...">
     </div>
-
+    <div id="loading">
+        <span> 加载中... <span>
+    </div>
     <div class="grid" id="grid"></div>
     <br>
 </div>

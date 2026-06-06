@@ -431,16 +431,19 @@ async function getAllWebsites() {
         if (websites && websites.length > 0) {
             return websites;
         } else {
-            showError('暂无网站数据');
+            document.getElementById("grid").innerHTML = '<div class="empty">暂无数据</div>';
+            return [];
         }
     } catch (error) {
         console.error('获取网站数据失败:', error);
-        showError('网络错误，请稍后重试');
+        document.getElementById("grid").innerHTML = '<div class="empty">网络错误，请稍后重试</div>';
+        return [];
     }
 }
 
 getAllWebsites().then(sites=>{
     if(!sites) return;
+    document.getElementById("loading").style.display = "none";
     render(sites);
     const search = document.getElementById("search");
     if (search) {
