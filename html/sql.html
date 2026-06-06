@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DataGrip Lite UI</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: JetBrains Mono, Consolas, monospace;
+    background: #0d0d0d;
+    color: #ddd;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    border-bottom: 1px solid #222;
+}
+
+.topbar h1 {
+    flex: 1;
+    font-size: 24px;
+}
+
+.login-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.login-form input {
+    width: 140px;
+    background: #0d0d0d;
+    color: #ddd;
+    border: 1px solid #333;
+    border-radius: 6px;
+    outline: none;
+    padding: 7px 9px;
+}
+
+.login-form button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 7px 12px;
+}
+
+.login-status {
+    min-width: 72px;
+    color: #999;
+    font-size: 12px;
+}
+
+/* layout */
+.app {
+    display: flex;
+    height: 100vh;
+}
+
+/* ========== sidebar ========== */
+.sidebar {
+    width: 220px;
+    background: #111;
+    border-right: 1px solid #222;
+}
+
+.db-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px;
+    border-bottom: 1px solid #222;
+    font-weight: bold;
+}
+
+.refresh-tables {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #aaa;
+    border: 1px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.refresh-tables:hover {
+    color: #fff;
+    background: #1f1f1f;
+}
+
+.refresh-tables:disabled {
+    color: #555;
+    cursor: default;
+    background: transparent;
+}
+
+.table-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.table-item svg {
+    flex: 0 0 auto;
+}
+
+.table-item span {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.table-item:hover {
+    background: #1f1f1f;
+}
+
+/* ========== main ========== */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* tabs */
+.tabs {
+    display: flex;
+    align-items: center;
+    background: #111;
+    border-bottom: 1px solid #222;
+    height: 40px;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    height: 100%;
+    border-right: 1px solid #222;
+    cursor: pointer;
+}
+
+.tab.active {
+    background: #1f1f1f;
+}
+
+.tab-close {
+    margin-left: 8px;
+    color: #888;
+    cursor: pointer;
+}
+
+.tab-close:hover {
+    color: red;
+}
+
+.new-btn {
+    margin-left: auto;
+    margin-right: 10px;
+    background: #2563eb;
+    border: none;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* editor */
+.editor {
+    height: 300px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar {
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid #222;
+}
+
+.run {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.sql {
+    flex: 1;
+    background: #0d0d0d;
+    color: #ddd;
+    border: none;
+    outline: none;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* result */
+.result {
+    flex: 1;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #222;
+    padding: 8px;
+    white-space: nowrap;
+}
+
+th {
+    background: #111;
+}
+
+tr:hover {
+    background: #1a1a1a;
+}
+</style>
+</head>
+
+<body>
+<div class="topbar">
+    <h1>D1 数据库操作助手</h1>
+    <form class="login-form" id="loginForm">
+        <input id="username" name="username" type="text" placeholder="username" autocomplete="username" />
+        <input id="password" name="password" type="password" placeholder="password" autocomplete="current-password" />
+        <button type="submit">Login</button>
+        <span class="login-status" id="loginStatus"></span>
+    </form>
+</div>
+<div class="app">
+
+    <!-- sidebar -->
+    <div class="sidebar">
+        <div class="db-title">
+            <span>DB表</span>
+            <button class="refresh-tables" id="refreshTables" type="button" title="刷新表名">↻</button>
+        </div>
+        <div id="tree"></div>
+    </div>
+
+    <!-- main -->
+    <div class="main">
+
+        <!-- tabs -->
+        <div class="tabs" id="tabs">
+            <button class="new-btn" onclick="newTab()">+ New</button>
+        </div>
+
+        <!-- editor -->
+        <div class="editor">
+            <div class="toolbar">
+                <button class="run">▶ Run</button>
+            </div>
+            <textarea class="sql" id="sql"></textarea>
+        </div>
+
+        <!-- result -->
+        <div class="result">
+            <table id="table"></table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const API_BASE_URL = "https://commend.longrichli.qzz.io";
+const LOGIN_API_ENDPOINT = `${API_BASE_URL}/login`;
+const SQL_API_ENDPOINT = `${API_BASE_URL}/api/sql`;
+
+
+const sqlApi = {
+    async query(sql) {
+        const sessionId = localStorage.getItem("sessionId");
+        const response = await fetch(SQL_API_ENDPOINT, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-session-id": sessionId || ""
+            },
+            body: JSON.stringify({ sql })
+        });
+
+        if (!response.ok) {
+            throw new Error(`SQL 请求失败：${response.status},msg: ${await response.text()}`);
+        }
+
+        const json = await response.json();
+        
+        return normalizeRows(json);
+    },
+
+    async getTables() {
+        return this.query(`
+            SELECT name
+            FROM sqlite_schema
+            WHERE type = 'table'
+              AND name NOT LIKE 'sqlite_%'
+            ORDER BY name
+        `);
+    },
+
+    async getTableRows(tableName) {
+        return this.query(`SELECT * FROM ${quoteIdentifier(tableName)} LIMIT 100`);
+    }
+};
+
+const authApi = {
+    async login(username, password) {
+        const response = await fetch(LOGIN_API_ENDPOINT, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        const sessionId = await response.headers.get("x-session-id");
+
+        if (sessionId) {
+            localStorage.setItem("sessionId", sessionId);
+        }
+        const text = await response.text();
+        let json = {};
+
+        try {
+            json = text ? JSON.parse(text) : {};
+        } catch (error) {
+            json = { message: text };
+        }
+
+        if (!response.ok) {
+            throw new Error(json.message || json.error || `登录失败：${response.status}`);
+        }
+
+        return json;
+    }
+};
+
+function normalizeRows(json) {
+    if (Array.isArray(json)) return json;
+    if (Array.isArray(json?.result?.[0]?.results)) return json.result[0].results;
+    if (Array.isArray(json?.rows)) return json.rows;
+    if (Array.isArray(json?.data)) return json.data;
+    if (Array.isArray(json?.result)) return json.result;
+    if (Array.isArray(json?.results)) return json.results;
+    return [];
+}
+
+function quoteIdentifier(name) {
+    return `"${String(name).replaceAll('"', '""')}"`;
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+/* ================= tabs state ================= */
+let tabs = [
+    {
+        id: 1,
+        name: "Query 1",
+        sql: "",
+        table: "",
+        result: []
+    }
+];
+
+let active = 1;
+
+// ⭐ 只用于 ID
+let nextTabId = 2;
+
+// ⭐ 只用于显示编号
+let tabIndex = 2;
+
+/* ================= get active tab ================= */
+function getActiveTab() {
+    return tabs.find(t => t.id === active);
+}
+
+/* ================= render tabs ================= */
+function renderTabs() {
+    const el = document.getElementById("tabs");
+
+    el.innerHTML = tabs.map(t => `
+        <div class="tab ${t.id === active ? 'active' : ''}">
+            <span onclick="switchTab(${t.id})">${t.name}</span>
+            <span class="tab-close" onclick="closeTab(event, ${t.id})">×</span>
+        </div>
+    `).join("") + `<button class="new-btn" onclick="newTab()">+ New</button>`;
+}
+
+/* ================= switch tab ================= */
+function switchTab(id) {
+    saveCurrentState();
+
+    active = id;
+    const t = getActiveTab();
+
+    document.getElementById("sql").value = t.sql;
+    renderTable(t.result);
+
+    renderTabs();
+}
+
+/* ================= save current tab state ================= */
+function saveCurrentState() {
+    const t = getActiveTab();
+    t.sql = document.getElementById("sql").value;
+}
+
+/* ================= new tab ================= */
+function newTab() {
+    saveCurrentState();
+
+    const t = {
+        id: nextTabId++,              // 真实唯一ID
+        name: "Query " + tabIndex++,  // UI编号
+        sql: "",
+        table: "",
+        result: []
+    };
+
+    tabs.push(t);
+    active = t.id;
+
+    document.getElementById("sql").value = t.sql;
+    renderTable(t.result);
+    renderTabs();
+}
+
+/* ================= close tab ================= */
+function closeTab(e, id) {
+    e.stopPropagation();
+
+    if (tabs.length === 1) return;
+
+    const idx = tabs.findIndex(t => t.id === id);
+    const isActive = active === id;
+
+    tabs.splice(idx, 1);
+
+    if (isActive) {
+        const next = tabs[idx] || tabs[idx - 1];
+        active = next.id;
+
+        document.getElementById("sql").value = next.sql;
+        renderTable(next.result);
+    }
+
+    renderTabs();
+}
+
+/* ================= run query ================= */
+async function runQuery() {
+    saveCurrentState();
+
+    const t = getActiveTab();
+    if (!t.sql.trim()) return;
+
+    renderMessage("执行中...");
+
+    try {
+        const result = await sqlApi.query(t.sql);
+
+        // ⭐ 关键：结果存到 tab 自己
+        t.result = result;
+
+        renderTable(result);
+    } catch (error) {
+        renderMessage(error.message);
+    }
+}
+
+/* ================= render table ================= */
+function renderTable(rows) {
+    const table = document.getElementById("table");
+
+    if (!rows || rows.length === 0) {
+        renderMessage("暂无数据");
+        return;
+    }
+
+    const cols = Object.keys(rows[0]);
+
+    let html = "<thead><tr>";
+    cols.forEach(c => html += `<th>${escapeHtml(c)}</th>`);
+    html += "</tr></thead><tbody>";
+
+    rows.forEach(r => {
+        html += "<tr>";
+        cols.forEach(c => html += `<td>${escapeHtml(r[c])}</td>`);
+        html += "</tr>";
+    });
+
+    html += "</tbody>";
+
+    table.innerHTML = html;
+}
+
+function renderMessage(message) {
+    document.getElementById("table").innerHTML = `
+        <tbody>
+            <tr>
+                <td>${escapeHtml(message)}</td>
+            </tr>
+        </tbody>
+    `;
+}
+
+/* ================= sidebar ================= */
+async function renderTree() {
+    const el = document.getElementById("tree");
+    const refreshButton = document.getElementById("refreshTables");
+
+    if (refreshButton) refreshButton.disabled = true;
+    el.innerHTML = `<div class="table-item"><span>加载中...</span></div>`;
+
+    try {
+        const tables = await sqlApi.getTables();
+
+        const tableItems = tables
+            .map(row => row.name || row.table_name || row.tbl_name)
+            .filter(Boolean);
+
+        if (tableItems.length === 0) {
+            el.innerHTML = `<div class="table-item"><span>暂无表</span></div>`;
+            return;
+        }
+
+        el.innerHTML = tableItems.map(tableName => {
+            const tableArg = JSON.stringify(tableName).replaceAll('"', "&quot;");
+
+            return `
+        <div class="table-item" onclick="setTable(${tableArg})">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM40,112H80v32H40Zm56,0H216v32H96ZM216,64V96H40V64ZM40,160H80v32H40Zm176,32H96V160H216v32Z"></path></svg>
+            <span>${escapeHtml(tableName)}</span>
+        </div>
+            `;
+        }).join("");
+    } catch (error) {
+        el.innerHTML = `<div class="table-item"><span>${escapeHtml(error.message)}</span></div>`;
+    } finally {
+        if (refreshButton) refreshButton.disabled = false;
+    }
+}
+
+/* change table in current tab */
+async function setTable(name) {
+    const t = getActiveTab();
+    t.table = name;
+    t.sql = `SELECT * FROM ${quoteIdentifier(name)} LIMIT 100`;
+    document.getElementById("sql").value = t.sql;
+
+    renderMessage("查询中...");
+
+    try {
+        const rows = await sqlApi.getTableRows(name);
+        t.result = rows;
+
+        renderTable(rows);
+    } catch (error) {
+        renderMessage(error.message);
+    }
+}
+
+/* ================= login ================= */
+async function handleLogin(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const status = document.getElementById("loginStatus");
+
+    if (!username || !password) {
+        status.textContent = "请输入账号密码";
+        return;
+    }
+
+    status.textContent = "登录中...";
+
+    try {
+        const result = await authApi.login(username, password);
+        status.textContent = result.message || "已登录";
+        document.getElementById("password").value = "";
+        await renderTree();
+    } catch (error) {
+        status.textContent = error.message;
+    }
+}
+
+/* ================= bind run button ================= */
+document.querySelector(".run").onclick = runQuery;
+document.getElementById("loginForm").onsubmit = handleLogin;
+document.getElementById("refreshTables").onclick = renderTree;
+
+/* ================= init ================= */
+renderTree();
+renderTabs();
+document.getElementById("sql").value = tabs[0].sql;
+renderTable(tabs[0].result);
+</script>
+
+</body>
+</html>
